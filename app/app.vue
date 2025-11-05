@@ -1,6 +1,9 @@
+<script>
+import "~/assets/css/tailwind.css";
+</script>
+
 <template>
   <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
+    <nuxt-page />
   </div>
 </template>
