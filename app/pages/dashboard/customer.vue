@@ -1,7 +1,9 @@
 <script setup lang="ts">
 definePageMeta({
   layout: "dashboard",
-  middleware: ["auth"],
+});
+useHead({
+  title: "Pelanggan | PG. Pritani",
 });
 </script>
 

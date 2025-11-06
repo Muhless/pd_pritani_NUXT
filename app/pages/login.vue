@@ -68,7 +68,7 @@
         <p>
           Belum punya akun?
           <NuxtLink
-            to="/auth/register"
+            to="/register"
             class="hover:text-green-600 underline hover:cursor-pointer transition"
           >
             Buat Disini

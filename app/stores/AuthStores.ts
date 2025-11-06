@@ -4,6 +4,9 @@ interface User {
   id: number;
   username: string;
   role: string;
+  email?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 interface AuthState {
@@ -24,6 +27,7 @@ export const useAuthStore = defineStore("auth", {
   },
 
   actions: {
+    // 🔹 LOGIN
     async login(username: string, password: string) {
       try {
         this.loading = true;
@@ -35,7 +39,7 @@ export const useAuthStore = defineStore("auth", {
         });
 
         const data = await res.json();
-        console.log("LOGIN RESPONSE:", data);
+        console.log("✅ LOGIN RESPONSE:", data);
 
         if (!res.ok) {
           throw new Error(data.message || "Login gagal");
@@ -45,101 +49,94 @@ export const useAuthStore = defineStore("auth", {
         this.token = data.token;
         this.user = data.user;
 
-        // ✅ Simpan ke cookie
-        this.saveToCookie();
+        // ✅ Simpan ke localStorage (PENTING!)
+        this.saveToStorage();
 
-        console.log("User tersimpan di store:", this.user);
+        console.log("✅ Login berhasil, state:", {
+          token: this.token,
+          user: this.user,
+          isAuthenticated: this.isAuthenticated,
+        });
       } catch (err: any) {
+        console.error("❌ Login error:", err);
         throw new Error(err.message);
       } finally {
         this.loading = false;
       }
     },
 
+    // 🔹 LOGOUT
     logout() {
       this.token = null;
       this.user = null;
-      
-      // ✅ Hapus cookie
-      const tokenCookie = useCookie("token", { path: "/" });
-      const userCookie = useCookie("user", { path: "/" });
-      
-      tokenCookie.value = null;
-      userCookie.value = null;
+      this.clearStorage();
+      console.log("✅ Logout berhasil");
     },
 
-    loadFromCookie() {
-      try {
-        const tokenCookie = useCookie<string | null>("token", { path: "/" });
-        const userCookie = useCookie<string | null>("user", { path: "/" });
-        
-        console.log("Raw cookie values:", {
-          token: tokenCookie.value,
-          user: userCookie.value
-        });
+    // 🔹 SAVE TO LOCALSTORAGE
+    saveToStorage() {
+      if (process.client) {
+        try {
+          console.log("💾 Saving to localStorage...");
 
-        // ✅ Load token
-        this.token = tokenCookie.value ?? null;
-
-        // ✅ Load dan parse user
-        if (userCookie.value) {
-          const userValue = userCookie.value;
-          
-          // Cek apakah cookie rusak
-          if (userValue === '[object Object]' || userValue === 'null' || userValue === 'undefined') {
-            console.warn("Cookie rusak terdeteksi, dibersihkan");
-            throw new Error('Invalid cookie format');
+          if (this.token) {
+            localStorage.setItem("token", this.token);
           }
 
-          // Parse JSON
-          this.user = JSON.parse(userValue);
-          console.log("User berhasil di-load:", this.user);
-        } else {
-          this.user = null;
+          if (this.user) {
+            localStorage.setItem("user", JSON.stringify(this.user));
+          }
+
+          console.log("✅ Saved to localStorage:", {
+            token: localStorage.getItem("token")?.substring(0, 20) + "...",
+            user: localStorage.getItem("user"),
+          });
+        } catch (err) {
+          console.error("❌ Error saving to localStorage:", err);
         }
-      } catch (err) {
-        console.error("Gagal parse user dari cookie:", err);
-        
-        // ✅ Clear semua cookie yang rusak
-        this.token = null;
-        this.user = null;
-        
-        const tokenCookie = useCookie("token", { path: "/" });
-        const userCookie = useCookie("user", { path: "/" });
-        
-        tokenCookie.value = null;
-        userCookie.value = null;
-        
-        console.log("Cookie rusak telah dibersihkan");
       }
     },
 
-    saveToCookie() {
-      const tokenCookie = useCookie<string | null>("token", { 
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7, // 7 hari
-        sameSite: 'lax'
-      });
-      
-      const userCookie = useCookie<string | null>("user", { 
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7, // 7 hari
-        sameSite: 'lax'
-      });
+    // 🔹 LOAD FROM LOCALSTORAGE
+    loadFromStorage() {
+      if (process.client) {
+        try {
+          console.log("🔄 Loading from localStorage...");
 
-      // ✅ Simpan token
-      tokenCookie.value = this.token;
-      
-      // ✅ Stringify user dengan benar
-      if (this.user) {
-        const userJson = JSON.stringify(this.user);
-        userCookie.value = userJson;
-        console.log("Cookie disimpan:", { 
-          token: this.token, 
-          userJson: userJson 
-        });
-      } else {
-        userCookie.value = null;
+          const token = localStorage.getItem("token");
+          const userStr = localStorage.getItem("user");
+
+          console.log("📦 localStorage values:", {
+            token: token ? "EXISTS" : "NULL",
+            user: userStr ? "EXISTS" : "NULL",
+          });
+
+          if (!token || !userStr) {
+            console.log("❌ No data in localStorage");
+            return;
+          }
+
+          this.token = token;
+          this.user = JSON.parse(userStr);
+
+          console.log("✅ Loaded from localStorage:", {
+            token: this.token?.substring(0, 20) + "...",
+            user: this.user,
+            isAuthenticated: this.isAuthenticated,
+          });
+        } catch (err) {
+          console.error("❌ Error loading from localStorage:", err);
+          this.clearStorage();
+        }
+      }
+    },
+
+    // 🔹 CLEAR STORAGE
+    clearStorage() {
+      if (process.client) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        console.log("✅ localStorage cleared");
       }
     },
   },

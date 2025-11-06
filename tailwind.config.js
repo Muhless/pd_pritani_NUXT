@@ -6,7 +6,13 @@ export default {
     "./components/**/*.{vue,js,ts}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        background: "#ffffff",
+        primary: "#227d52",
+        secondary:"#009488"
+      },
+    },
   },
   plugins: [],
 };

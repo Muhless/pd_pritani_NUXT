@@ -1,7 +1,10 @@
 <script setup lang="ts">
 definePageMeta({
   layout: "dashboard",
-  middleware: ["auth"],
+});
+
+useHead({
+  title: "Karyawan | PG. Pritani",
 });
 </script>
 

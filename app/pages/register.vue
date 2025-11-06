@@ -52,7 +52,7 @@
         <p>
           Sudah punya akun ?
           <NuxtLink
-            to="/auth/login"
+            to="/login"
             class="hover:text-green-600 underline hover:cursor-pointer transition"
           >
             Login Disini

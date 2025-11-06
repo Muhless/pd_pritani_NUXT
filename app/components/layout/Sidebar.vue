@@ -1,38 +1,34 @@
 <template>
   <aside
-    class="fixed left-0 top-0 h-screen w-64 bg-green-600 text-white flex flex-col justify-between"
+    class="fixed h-screen w-16 bg-secondary text-white flex flex-col justify-between"
   >
     <!-- Header -->
-    <div>
-      <div
-        class="flex items-center justify-center h-16 border-b border-green-500"
-      >
-        <h1 class="text-2xl font-bold">AdyTrans</h1>
+    <div class="flex flex-col items-center">
+      <div class="mt-10">
+        <img src="/images/logo-pritani.png" alt="" class="size-12" />
       </div>
 
       <!-- Menu -->
-      <nav class="mt-6">
+      <nav class="mt-6 space-y-5">
         <NuxtLink
           v-for="item in menuItems"
           :key="item.name"
           :to="item.to"
-          class="flex items-center px-6 py-3 hover:bg-green-700 transition"
+          class="flex items-center p-2 hover:bg-white hover:text-primary rounded-full transition"
           :class="{ 'bg-green-700': route.path === item.to }"
         >
-          <component :is="item.icon" class="w-5 h-5 mr-3" />
-          <span>{{ item.name }}</span>
+          <component :is="item.icon" class="size-6" />
         </NuxtLink>
       </nav>
     </div>
 
     <!-- Footer / Logout -->
-    <div class="border-t border-green-500 p-4">
+    <div class="mb-5 flex text-center items-center justify-center">
       <button
-        class="w-full flex items-center justify-center py-2 bg-green-700 hover:bg-green-800 rounded transition"
+        class="flex items-center justify-center p-2 bg-green-700 hover:bg-white hover:text-primary rounded-full transition"
         @click="handleLogout"
       >
-        <ArrowLeftOnRectangleIcon class="w-5 h-5 mr-2" />
-        Keluar
+        <ArrowLeftStartOnRectangleIcon class="size-6" />
       </button>
     </div>
   </aside>
@@ -40,12 +36,11 @@
 
 <script setup lang="ts">
 import {
-  ArrowLeftOnRectangleIcon,
-  Cog6ToothIcon,
-  HomeIcon,
-  TruckIcon,
-  UsersIcon,
-} from "@heroicons/vue/24/solid";
+  ArrowLeftStartOnRectangleIcon,
+  ShoppingBagIcon,
+  UserIcon,
+} from "@heroicons/vue/16/solid";
+import { HomeIcon, UsersIcon } from "@heroicons/vue/24/solid";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "~/stores/AuthStores";
 
@@ -55,13 +50,13 @@ const auth = useAuthStore();
 
 const menuItems = [
   { name: "Dashboard", to: "/dashboard", icon: HomeIcon },
-  { name: "Pelanggan", to: "/dashboard/customer", icon: TruckIcon },
-  { name: "Karyawan", to: "/dashboard/employee", icon: Cog6ToothIcon },
-  { name: "Produk", to: "/dashboard/product", icon: UsersIcon },
+  { name: "Karyawan", to: "/dashboard/employee", icon: UserIcon },
+  { name: "Pelanggan", to: "/dashboard/customer", icon: UsersIcon },
+  { name: "Produk", to: "/dashboard/product", icon: ShoppingBagIcon },
 ];
 
 const handleLogout = () => {
   auth.logout();
-  router.push("/auth/login");
+  router.push("/login");
 };
 </script>

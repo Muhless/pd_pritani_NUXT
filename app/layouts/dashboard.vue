@@ -4,7 +4,7 @@
     <Sidebar />
 
     <!-- Konten halaman -->
-    <main class="flex-1 ml-64 bg-gray-50 p-6">
+    <main class="flex-1 ml-16 bg-gray-50 p-9">
       <slot />
       <!-- Konten dari page akan muncul di sini -->
     </main>
