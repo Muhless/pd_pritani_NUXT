@@ -47,7 +47,7 @@
           type="submit"
         >
           <span>Buat</span>
-          <ArrowRightCircleIcon class="w-5 h-5" />
+          <Icon icon="mdi:arrow-right" class="w-5 h-5" />
         </button>
         <p>
           Sudah punya akun ?
@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-import { ArrowRightCircleIcon } from "@heroicons/vue/16/solid";
+import { Icon } from "@iconify/vue";
 import BaseInput from "~/components/input/BaseInput.vue";
 import BaseSelect from "~/components/input/BaseSelect.vue";
 

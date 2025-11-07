@@ -61,8 +61,8 @@
             </svg>
             <span>Memproses...</span>
           </span>
-
-          <ArrowRightCircleIcon v-if="!auth.loading" class="w-5 h-5" />
+          <p>Masuk</p>
+          <Icon icon="mdi:arrow-right" v-if="!auth.loading" class="w-5 h-5" />
         </button>
 
         <p>
@@ -83,7 +83,7 @@
 
 <script setup lang="ts">
 import { navigateTo, useHead } from "#app";
-import { ArrowRightCircleIcon } from "@heroicons/vue/16/solid";
+import { Icon } from "@iconify/vue";
 import { ref } from "vue";
 import BaseInput from "~/components/input/BaseInput.vue";
 import { useAuthStore } from "~/stores/AuthStores";

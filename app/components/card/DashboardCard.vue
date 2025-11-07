@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ArrowUpIcon, ArrowUpRightIcon } from "@heroicons/vue/24/solid";
-import type { Component } from "vue";
+import { Icon } from "@iconify/vue";
 
 interface Props {
   label?: string;
   content?: string;
-  icon: Component;
+  icon: string;
 }
 
 const { label, content, icon } = withDefaults(defineProps<Props>(), {
   label: "Tanpa label",
   content: "XXX",
+  icon: "mdi:chart-line",
 });
 </script>
 
@@ -20,7 +20,7 @@ const { label, content, icon } = withDefaults(defineProps<Props>(), {
   >
     <div class="w-full flex space-x-3 items-center">
       <div class="bg-gray-200 rounded-full p-2">
-        <component :is="icon" class="w-5 h-auto" />
+        <Icon :icon="icon" class="w-5 h-auto" />
       </div>
       <h1>{{ label }}</h1>
     </div>
@@ -36,7 +36,7 @@ const { label, content, icon } = withDefaults(defineProps<Props>(), {
         +10 <span class="font-normal">Dari bulan kemarin</span>
       </h1>
       <div class="bg-gray-200 rounded-full p-2 cursor-pointer">
-        <ArrowUpRightIcon class="w-3 h-auto" />
+        <Icon icon="mdi:arrow-up-right-bold" class="w-3 h-auto" />
       </div>
     </div>
   </div>

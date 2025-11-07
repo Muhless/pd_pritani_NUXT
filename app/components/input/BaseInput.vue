@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/16/solid";
+import { Icon } from "@iconify/vue";
 import { ref } from "vue";
 
 interface Props {
@@ -52,8 +52,8 @@ const inputType = computed(() =>
         class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
         @click="showPassword = !showPassword"
       >
-        <EyeIcon v-if="!showPassword" class="w-5 h-5" />
-        <EyeSlashIcon v-else class="w-5 h-5" />
+        <Icon icon="mdi:eye" v-if="!showPassword" class="w-5 h-5" />
+        <Icon icon="mdi:eye-closed" v-else class="w-5 h-5" />
       </button>
     </div>
   </div>

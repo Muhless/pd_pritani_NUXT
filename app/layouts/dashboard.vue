@@ -1,12 +1,9 @@
 <template>
   <div class="flex min-h-screen">
-    <!-- Sidebar -->
     <Sidebar />
 
-    <!-- Konten halaman -->
-    <main class="flex-1 ml-16 bg-gray-50 p-9">
+    <main class="flex-1 ml-16 bg-gray-50">
       <slot />
-      <!-- Konten dari page akan muncul di sini -->
     </main>
   </div>
 </template>

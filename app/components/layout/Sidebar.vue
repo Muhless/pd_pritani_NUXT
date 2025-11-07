@@ -17,7 +17,7 @@
           class="flex items-center p-2 hover:bg-white hover:text-primary rounded-full transition"
           :class="{ 'bg-green-700': route.path === item.to }"
         >
-          <component :is="item.icon" class="size-6" />
+          <Icon :icon="item.icon" class="size-6" />
         </NuxtLink>
       </nav>
     </div>
@@ -25,22 +25,17 @@
     <!-- Footer / Logout -->
     <div class="mb-5 flex text-center items-center justify-center">
       <button
-        class="flex items-center justify-center p-2 bg-green-700 hover:bg-white hover:text-primary rounded-full transition"
+        class="flex items-center justify-center p-2 hover:bg-red-600 hover:text-white rounded-full transition"
         @click="handleLogout"
       >
-        <ArrowLeftStartOnRectangleIcon class="size-6" />
+        <Icon icon="mdi:exit-run" class="size-6" />
       </button>
     </div>
   </aside>
 </template>
 
 <script setup lang="ts">
-import {
-  ArrowLeftStartOnRectangleIcon,
-  ShoppingBagIcon,
-  UserIcon,
-} from "@heroicons/vue/16/solid";
-import { HomeIcon, UsersIcon } from "@heroicons/vue/24/solid";
+import { Icon } from "@iconify/vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "~/stores/AuthStores";
 
@@ -49,10 +44,10 @@ const router = useRouter();
 const auth = useAuthStore();
 
 const menuItems = [
-  { name: "Dashboard", to: "/dashboard", icon: HomeIcon },
-  { name: "Karyawan", to: "/dashboard/employee", icon: UserIcon },
-  { name: "Pelanggan", to: "/dashboard/customer", icon: UsersIcon },
-  { name: "Produk", to: "/dashboard/product", icon: ShoppingBagIcon },
+  { name: "Dashboard", to: "/dashboard", icon: "mdi:view-dashboard" },
+  { name: "Karyawan", to: "/dashboard/employee", icon: "mdi:account-box" },
+  { name: "Pelanggan", to: "/dashboard/customer", icon: "mdi:account-group" },
+  { name: "Produk", to: "/dashboard/product", icon: "mdi:cube" },
 ];
 
 const handleLogout = () => {
