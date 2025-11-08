@@ -1,6 +1,13 @@
 <script setup>
-const router = useRouter();
-onMounted(() => {
-  router.replace("/dashboard");
+definePageMeta({
+  middleware: [
+    function (to, from) {
+      const authStore = useAuthStore();
+      if (authStore.isAuthenticated) {
+        return navigateTo("/dashboard");
+      }
+      return navigateTo("/login");
+    },
+  ],
 });
 </script>

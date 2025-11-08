@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Icon } from "@iconify/vue";
 import BaseCard from "~/components/card/BaseCard.vue";
 import DashboardCard from "~/components/card/DashboardCard.vue";
+import RightSide from "~/components/layout/dashboard/RightSide.vue";
 import UserProfile from "~/components/UserProfile.vue";
 import { useAuthStore } from "~/stores/AuthStores";
 
@@ -28,20 +28,16 @@ definePageMeta({
       </BaseCard>
 
       <div class="gap-3 grid grid-cols-4">
-        <DashboardCard label="Pesanan" content="430" icon="mdi:cart-arrow-right" />
+        <DashboardCard
+          label="Pesanan"
+          content="430"
+          icon="mdi:cart-arrow-right"
+        />
         <DashboardCard label="Produk" icon="mdi:shopping" />
-        <DashboardCard label="Pelanggan" icon="mdi:account"/>
+        <DashboardCard label="Pelanggan" icon="mdi:account" />
         <DashboardCard label="Karyawan" icon="mdi:account-group" />
       </div>
     </div>
-    <div class="w-3/12 bg-foreground border-2 p-9">
-      <UserProfile />
-      <div class="mt-5">
-        <h1 class="text-2xl">Pesanan</h1>
-        <div>
-          <Icon icon="heroicons:home" />
-        </div>
-      </div>
-    </div>
+  <RightSide/>
   </div>
 </template>

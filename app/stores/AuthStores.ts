@@ -139,5 +139,7 @@ export const useAuthStore = defineStore("auth", {
         console.log("✅ localStorage cleared");
       }
     },
+
+    persist: true,
   },
 });

@@ -1,32 +1,64 @@
 // middleware/auth.global.ts
-let isLoaded = false; // ⬅️ Flag untuk load sekali saja
+let isLoaded = false;
+let navigationCount = 0;
 
 export default defineNuxtRouteMiddleware((to, from) => {
+  navigationCount++;
+  
+  console.log(`
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔢 Navigation #${navigationCount}
+📍 FROM: ${from?.path || 'initial'} 
+📍 TO: ${to.path}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  `);
+  
   const authStore = useAuthStore();
 
-  // Load dari storage hanya sekali
   if (!isLoaded) {
     console.log("🔄 First load - reading from storage");
     authStore.loadFromStorage();
     isLoaded = true;
   }
 
-  console.log("🛡️ Auth check:", {
-    path: to.path,
+  console.log("🛡️ Auth State:", {
     isAuthenticated: authStore.isAuthenticated,
     user: authStore.user?.username,
   });
 
   const publicPages = ["/login", "/register"];
-  const isPublicPage = publicPages.some((page) => to.path.startsWith(page));
+  const isPublicPage = publicPages.includes(to.path);
+  
+  console.log("📄 Page Check:", {
+    path: to.path,
+    isPublicPage: isPublicPage,
+  });
 
-  if (!authStore.isAuthenticated && !isPublicPage) {
-    console.log("❌ Redirect to login");
+  // CRITICAL: Return early untuk prevent multiple navigations
+  
+  // 1. Handle root
+  if (to.path === "/") {
+    const target = authStore.isAuthenticated ? "/dashboard" : "/login";
+    console.log("🏠 Root redirect →", target);
+    return navigateTo(target);
+  }
+
+  // 2. Public pages + authenticated = go to dashboard
+  if (isPublicPage && authStore.isAuthenticated) {
+    console.log("🚫 Public page while authenticated → /dashboard");
+    return navigateTo("/dashboard");
+  }
+
+  // 3. Protected pages + not authenticated = go to login
+  if (!isPublicPage && !authStore.isAuthenticated) {
+    console.log("🚫 Protected page while not authenticated → /login");
     return navigateTo("/login");
   }
 
-  if (authStore.isAuthenticated && to.path === "/login") {
-    console.log("✅ Redirect to dashboard");
-    return navigateTo("/dashboard");
-  }
+  // 4. All good - allow navigation
+  console.log("✅ Navigation allowed to:", to.path);
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+  
+  // IMPORTANT: Explicitly return undefined untuk allow navigation
+  return undefined;
 });
