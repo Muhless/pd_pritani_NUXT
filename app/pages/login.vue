@@ -1,18 +1,22 @@
 <template>
-  <div class="flex space-x-3">
-    <div class="w-2/3">
-      <img src="/images/bg-1.jpg" alt="Login" class="h-full" />
-    </div>
-
+  <div class="flex items-center justify-center min-h-screen bg-gray-100">
     <div
-      class="w-1/3 min-h-screen flex flex-col items-center justify-center text-center"
+      class="flex flex-col items-center justify-center text-center bg-white w-96 p-8 rounded-lg"
     >
-      <div class="mb-4">
-        <h1 class="text-4xl font-bold text-green-600 mb-4">Selamat Datang</h1>
-        <p class="text-gray-700">Silahkan login terlebih dahulu.</p>
+      <div class="mb-4 flex flex-col items-center">
+        <img
+          src="/images/logo-pritani.png"
+          alt="logo-pritani"
+          class="w-12 h-auto"
+        />
+        <h1 class="mb-2 text-4xl font-bold text-green-600">Selamat Datang</h1>
+        <p class="text-gray-600">Silahkan login terlebih dahulu.</p>
       </div>
 
-      <form @submit.prevent="handleLogin" class="flex flex-col space-y-5">
+      <form
+        @submit.prevent="handleLogin"
+        class="flex flex-col space-y-5 w-full"
+      >
         <BaseInput
           v-model="username"
           id="username"
@@ -28,19 +32,20 @@
         />
 
         <p
-          class="flex text-gray-500 hover:cursor-pointer hover:text-green-600 transition"
+          class="text-gray-400 text-sm hover:cursor-pointer hover:text-green-400 transition"
         >
           Lupa password?
         </p>
+        <p v-if="error" class="mt-2 text-sm text-red-500">{{ error }}</p>
 
         <button
-          class="flex items-center justify-center space-x-2 mt-6 w-96 py-3 bg-green-500 text-white rounded hover:bg-green-600 transition"
+          class="flex items-center justify-center py-3 mt-4 space-x-2 text-white bg-green-500 rounded-md hover:bg-green-600 transition"
           type="submit"
           :disabled="auth.loading"
         >
           <span v-if="auth.loading" class="flex items-center space-x-2">
             <svg
-              class="animate-spin h-5 w-5 text-white"
+              class="w-5 h-5 text-white animate-spin"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -52,30 +57,28 @@
                 r="10"
                 stroke="currentColor"
                 stroke-width="4"
-              ></circle>
+              />
               <path
                 class="opacity-75"
                 fill="currentColor"
                 d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-              ></path>
+              />
             </svg>
             <span>Memproses...</span>
           </span>
-          <p>Masuk</p>
-          <Icon icon="mdi:arrow-right" v-if="!auth.loading" class="w-5 h-5" />
+          <p v-else>Masuk</p>
+          <Icon v-if="!auth.loading" icon="mdi:arrow-right" class="w-5 h-5" />
         </button>
 
-        <p>
+        <p class="text-gray-300">
           Belum punya akun?
           <NuxtLink
             to="/register"
-            class="hover:text-green-600 underline hover:cursor-pointer transition"
+            class="underline hover:text-green-400 transition"
           >
             Buat Disini
           </NuxtLink>
         </p>
-
-        <p v-if="error" class="text-red-500 text-sm mt-2">{{ error }}</p>
       </form>
     </div>
   </div>
@@ -89,7 +92,7 @@ import BaseInput from "~/components/input/BaseInput.vue";
 import { useAuthStore } from "~/stores/AuthStores";
 
 useHead({
-  title: "Login",
+  title: "Login | Dashboard PG. Pritani ",
   meta: [{ name: "login", content: "Login Page" }],
 });
 

@@ -28,17 +28,13 @@ const inputType = computed(() =>
 
 <template>
   <div class="flex flex-col space-y-1 w-full relative">
-    <!-- <label v-if="label" :for="id" class="text-sm font-medium text-gray-700">
-      {{ label }}
-    </label> -->
-
-    <div class="relative w-96">
+    <div class="relative">
       <input
         :id="id"
         :name="name"
         :type="inputType"
         :placeholder="placeholder"
-        class="bg-gray-100 py-3 px-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 pr-10"
+        class="py-3 px-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 pr-10"
         :value="modelValue"
         @input="
           emit('update:modelValue', ($event.target as HTMLInputElement).value)
