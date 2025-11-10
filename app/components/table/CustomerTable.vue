@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
+
+const page = ref(1);
 </script>
 
 <template>
   <n-table
     :bordered="false"
     :single-line="false"
-    class="overflow-hidden border border-b-4 border-black rounded-xl"
+    class="overflow-hidden rounded-xl shadow-lg"
   >
-    <thead class="text-white bg-green-600">
+    <thead class="text-white">
       <tr>
         <th class="px-4 py-3 text-left">No</th>
         <th class="px-4 py-3 text-left">Nama</th>
@@ -69,4 +71,7 @@ import { Icon } from "@iconify/vue";
       </tr>
     </tbody>
   </n-table>
+  <div class="flex justify-center py-3">
+    <n-pagination v-model:page="page" :page-count="100" />
+  </div>
 </template>

@@ -15,7 +15,7 @@ useHead({
   <div class="p-9">
     <BaseCard>
       <div class="flex justify-between">
-        <h1 class="text-2xl font-bold">Pelanggan</h1>
+        <h1 class="text-2xl font-bold text-primary">Pelanggan</h1>
         <n-button
           type="primary"
           size="medium"

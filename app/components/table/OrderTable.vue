@@ -6,7 +6,7 @@ import { Icon } from "@iconify/vue";
   <n-table
     :bordered="false"
     :single-line="false"
-    class="bg-white rounded-2xl p-4 space-y-3 shadow-lg hover:shadow-xl transition-all duration-300"
+    class="bg-white rounded-2xl p-4 space-y-3 shadow-lg"
   >
     <thead class="text-white bg-green-600">
       <tr>

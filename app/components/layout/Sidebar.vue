@@ -44,10 +44,13 @@ const router = useRouter();
 const auth = useAuthStore();
 
 const menuItems = [
-  { name: "Dashboard", to: "/dashboard", icon: "mdi:view-dashboard" },
-  { name: "Karyawan", to: "/dashboard/employee", icon: "mdi:account-box" },
-  { name: "Pelanggan", to: "/dashboard/customer", icon: "mdi:account-group" },
-  { name: "Produk", to: "/dashboard/product", icon: "mdi:cube" },
+  { name: "Halaman Awal", to: "/home", icon: "mdi:view-dashboard" },
+  { name: "Karyawan", to: "/employee", icon: "mdi:account-box" },
+  { name: "Pelanggan", to: "/customer", icon: "mdi:account-group" },
+  { name: "Produk", to: "/product", icon: "ic:round-inventory-2" },
+  { name: "Keuangan", to: "/finance", icon: "ic:round-attach-money" },
+  { name: "Transaksi", to: "/transaction", icon: "ic:round-handshake" },
+  { name: "Pengaturan", to: "/setting", icon: "ic:round-settings" },
 ];
 
 const handleLogout = () => {

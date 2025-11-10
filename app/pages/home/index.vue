@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { Icon } from "@iconify/vue";
 import BaseCard from "~/components/card/BaseCard.vue";
 import DashboardCard from "~/components/card/DashboardCard.vue";
-import OrderTable from "~/components/table/OrderTable.vue";
+import OrderCard from "~/components/card/OrderCard.vue";
 import { useAuthStore } from "~/stores/AuthStores";
 
 useHead({
@@ -18,7 +17,7 @@ definePageMeta({
 <template>
   <div class="space-y-3 p-9 h-screen">
     <BaseCard>
-      <h1 class="text-2xl font-bold text-green-600 mb-2">Dashboard</h1>
+      <h1 class="text-2xl font-bold text-primary mb-2">Dashboard</h1>
       <p v-if="auth.user">
         Selamat datang,
         <span class="font-semibold">{{ auth.user.username }}</span>
@@ -27,23 +26,19 @@ definePageMeta({
     </BaseCard>
 
     <div class="gap-3 grid grid-cols-4">
-      <DashboardCard
-        label="Pesanan"
-        content="430"
-        icon="mdi:cart-arrow-right"
-      />
-      <DashboardCard label="Produk" icon="mdi:shopping" />
+      <DashboardCard label="Transaksi" content="430" icon="mdi:handshake" />
+      <DashboardCard label="Pesanan" icon="mdi:cart" />
       <DashboardCard label="Pelanggan" icon="mdi:account" />
-      <DashboardCard label="Karyawan" icon="mdi:account-group" />
+      <DashboardCard label="Pendapatan" icon="ic:round-attach-money" />
     </div>
-    <div>
-      <BaseCard>
-        <div class="flex gap-3 items-center">
-          <Icon icon="ci:shopping-cart-01" class="size-6" />
-          <h1 class="text-xl font-bold">Pesanan</h1>
-        </div>
-        <OrderTable />
-      </BaseCard>
+    <div class="grid grid-cols-3 gap-3">
+      <OrderCard class="col-span-2" />
+      <div>
+        <BaseCard>
+          <h1 class="text-xl font-bold">Transaksi Bulan Ini</h1>
+          <p class="text-center text-8xl font-bold">51</p>
+        </BaseCard>
+      </div>
     </div>
   </div>
 </template>

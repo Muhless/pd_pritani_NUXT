@@ -6,7 +6,7 @@ import { Icon } from "@iconify/vue";
   <n-table
     :bordered="false"
     :single-line="false"
-    class="overflow-hidden border border-b-4 border-black rounded-xl"
+    class="overflow-hidden rounded-lg shadow-lg"
   >
     <thead class="text-white bg-green-600">
       <tr>
@@ -49,7 +49,7 @@ import { Icon } from "@iconify/vue";
         <td class="px-4 py-3">08987654321</td>
         <td class="px-4 py-3">Jl. Sawah Luhur No.2</td>
         <td class="px-4 py-3 font-semibold text-red-500">Tidak Aktif</td>
-         <td class="flex justify-center gap-2">
+        <td class="flex justify-center gap-2">
           <div
             class="flex items-center justify-center bg-yellow-400 rounded size-8"
           >

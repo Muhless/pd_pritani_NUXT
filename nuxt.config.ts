@@ -58,4 +58,13 @@ export default defineNuxtConfig({
       apiBase: "http://localhost:8080",
     },
   },
+
+  components: {
+    dirs: [
+      {
+        path: "~/components",
+        pathPrefix: false,
+      },
+    ],
+  },
 });

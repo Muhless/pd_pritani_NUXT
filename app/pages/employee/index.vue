@@ -21,7 +21,7 @@ const showModal = ref(false);
     <BaseCard>
       <!-- Header -->
       <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold">Karyawan</h1>
+        <h1 class="text-2xl font-bold text-primary">Karyawan</h1>
 
         <!-- Tombol Tambah -->
         <n-button type="info" class="w-48 rounded-md" @click="showModal = true">
