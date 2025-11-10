@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
+import BaseCard from "./BaseCard.vue";
 
 interface Props {
   label?: string;
@@ -19,9 +20,7 @@ const {
 </script>
 
 <template>
-  <div
-    class="p-3 text-gray-800 bg-white border border-b-4 border-black rounded-lg shadow-sm"
-  >
+  <BaseCard>
     <div class="flex items-center w-full space-x-3">
       <div class="p-2 bg-gray-200 rounded-full">
         <Icon :icon="icon" class="w-5 h-auto" />
@@ -43,5 +42,5 @@ const {
         <Icon icon="mdi:arrow-up-right-bold" class="w-3 h-auto" />
       </div>
     </div>
-  </div>
+  </BaseCard>
 </template>

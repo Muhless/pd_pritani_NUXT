@@ -1,9 +1,7 @@
-<script setup lang="ts"></script>
-
 <template>
   <div
     v-bind="$attrs"
-    class="bg-white rounded-xl p-3 border border-b-4 border-black space-y-3"
+    class="bg-white rounded-2xl p-4 space-y-3 shadow-lg hover:shadow-xl transition-all duration-300"
   >
     <slot />
   </div>
