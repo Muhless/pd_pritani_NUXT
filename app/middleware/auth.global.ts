@@ -4,15 +4,15 @@ let navigationCount = 0;
 
 export default defineNuxtRouteMiddleware((to, from) => {
   navigationCount++;
-  
+
   console.log(`
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔢 Navigation #${navigationCount}
-📍 FROM: ${from?.path || 'initial'} 
+📍 FROM: ${from?.path || "initial"} 
 📍 TO: ${to.path}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   `);
-  
+
   const authStore = useAuthStore();
 
   if (!isLoaded) {
@@ -28,25 +28,25 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
   const publicPages = ["/login", "/register"];
   const isPublicPage = publicPages.includes(to.path);
-  
+
   console.log("📄 Page Check:", {
     path: to.path,
     isPublicPage: isPublicPage,
   });
 
   // CRITICAL: Return early untuk prevent multiple navigations
-  
+
   // 1. Handle root
   if (to.path === "/") {
-    const target = authStore.isAuthenticated ? "/dashboard" : "/login";
+    const target = authStore.isAuthenticated ? "/home" : "/login";
     console.log("🏠 Root redirect →", target);
     return navigateTo(target);
   }
 
-  // 2. Public pages + authenticated = go to dashboard
+  // 2. Public pages + authenticated = go to home
   if (isPublicPage && authStore.isAuthenticated) {
-    console.log("🚫 Public page while authenticated → /dashboard");
-    return navigateTo("/dashboard");
+    console.log("🚫 Public page while authenticated → /home");
+    return navigateTo("/home");
   }
 
   // 3. Protected pages + not authenticated = go to login
@@ -58,7 +58,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   // 4. All good - allow navigation
   console.log("✅ Navigation allowed to:", to.path);
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
-  
+
   // IMPORTANT: Explicitly return undefined untuk allow navigation
   return undefined;
 });

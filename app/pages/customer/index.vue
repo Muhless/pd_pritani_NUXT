@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Icon } from "@iconify/vue";
+import AddButton from "~/components/button/AddButton.vue";
 import BaseCard from "~/components/card/BaseCard.vue";
 import CustomerTable from "~/components/table/CustomerTable.vue";
 
@@ -16,15 +16,7 @@ useHead({
     <BaseCard>
       <div class="flex justify-between">
         <h1 class="text-2xl font-bold text-primary">Pelanggan</h1>
-        <n-button
-          type="primary"
-          size="medium"
-          @click=""
-          class="rounded-md w-48"
-        >
-          <h1>Tambah Pelanggan</h1>
-          <Icon icon="ic:baseline-groups-2" class="size-6" />
-        </n-button>
+        <AddButton label="Produk" />
       </div>
       <CustomerTable />
     </BaseCard>

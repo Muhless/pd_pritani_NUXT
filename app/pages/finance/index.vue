@@ -13,7 +13,10 @@ definePageMeta({
 <template>
   <div class="p-9">
     <BaseCard>
-      <h1 class="text-2xl font-bold text-primary">Finance</h1>
+      <div>
+        <h1 class="text-2xl font-bold text-primary">Finance</h1>
+        <AddButton label="Produk" />
+      </div>
     </BaseCard>
   </div>
 </template>
