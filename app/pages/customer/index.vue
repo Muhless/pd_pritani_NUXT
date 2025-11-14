@@ -12,12 +12,14 @@ useHead({
 </script>
 
 <template>
-  <div class="p-9">
+  <div class="p-9 space-y-3">
     <BaseCard>
-      <div class="flex justify-between">
+      <div class="flex justify-between items-center">
         <h1 class="text-2xl font-bold text-primary">Pelanggan</h1>
         <AddButton label="Produk" />
       </div>
+    </BaseCard>
+    <BaseCard>
       <CustomerTable />
     </BaseCard>
   </div>

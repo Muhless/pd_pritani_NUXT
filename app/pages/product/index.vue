@@ -70,22 +70,21 @@ const handleEdit = (id?: number) => {
 </script>
 
 <template>
-  <div class="p-6">
-    <!-- Header -->
-    <div
-      class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6"
-    >
-      <div>
-        <h1 class="text-2xl font-bold">Daftar Produk</h1>
-        <p class="text-gray-500 text-sm mt-1">
-          Total {{ products.length }} produk
-        </p>
+  <div class="p-9">
+    <BaseCard>
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-2xl font-bold text-primary">Daftar Produk</h1>
+          <p class="text-gray-500 text-sm mt-1">
+            Total {{ products.length }} produk
+          </p>
+        </div>
+        <AddButton @click="showModal = true">
+          <Icon icon="mdi:plus" class="mr-1" />
+          Tambah Produk
+        </AddButton>
       </div>
-      <AddButton @click="showModal = true">
-        <Icon icon="mdi:plus" class="mr-1" />
-        Tambah Produk
-      </AddButton>
-    </div>
+    </BaseCard>
 
     <!-- Search Bar -->
     <div class="mb-6">

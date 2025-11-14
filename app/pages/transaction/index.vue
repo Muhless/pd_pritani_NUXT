@@ -13,7 +13,10 @@ definePageMeta({
 <template>
   <div class="p-9">
     <BaseCard>
-      <h1 class="text-2xl font-bold text-primary">Transaksi</h1>
+      <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-primary">Transaksi</h1>
+        <AddButton label="Transaksi" />
+      </div>
     </BaseCard>
   </div>
 </template>

@@ -17,16 +17,14 @@ const showModal = ref(false);
 </script>
 
 <template>
-  <div class="p-9">
+  <div class="p-9 space-y-3">
     <BaseCard>
       <div class="flex items-center justify-between">
         <h1 class="text-2xl font-bold text-primary">Karyawan</h1>
         <AddButton label="Produk" />
       </div>
-
-      <EmployeeModal v-model:showModal="showModal" />
-
-      <EmployeeTable />
     </BaseCard>
+    <EmployeeTable />
+    <EmployeeModal v-model:showModal="showModal" />
   </div>
 </template>
