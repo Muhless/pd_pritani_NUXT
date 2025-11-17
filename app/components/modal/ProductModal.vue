@@ -177,15 +177,16 @@ const modalVisible = computed({
 
 const isEdit = computed(() => !!props.product?.id);
 
-// Product types
 const productTypes = [
-  { label: "Gula Pasir", value: "Gula Pasir" },
-  { label: "Gula Putih", value: "Gula Putih" },
-  { label: "Gula Merah", value: "Gula Merah" },
-  { label: "Gula Aren", value: "Gula Aren" },
-  { label: "Gula Kristal", value: "Gula Kristal" },
+  { label: "Gabah Kering Panen (GKP)", value: "Gabah Kering Panen" },
+  { label: "Gabah Kering Giling (GKG)", value: "Gabah Kering Giling" },
+  { label: "Beras Pecah Kulit (PK)", value: "Beras Pecah Kulit" },
+  { label: "Beras Setra Wangi", value: "Beras Setra Wangi" },
+  { label: "Beras IR 64", value: "Beras IR 64" },
   { label: "Beras Premium", value: "Beras Premium" },
-  { label: "Beras Organik", value: "Beras Organik" },
+  { label: "Beras Medium", value: "Beras Medium" },
+  { label: "Dedak Halus", value: "Dedak Halus" },
+  { label: "Bekatul", value: "Bekatul" },
 ];
 
 // Form state

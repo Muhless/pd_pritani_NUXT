@@ -121,7 +121,7 @@ const handleAddNew = () => {
 </script>
 
 <template>
-  <div class="p-9">
+  <div class="p-9 space-y-3">
     <BaseCard>
       <div class="flex justify-between items-center">
         <div>
@@ -130,10 +130,7 @@ const handleAddNew = () => {
             Total {{ products.length }} produk
           </p>
         </div>
-        <AddButton @click="handleAddNew">
-          <Icon icon="mdi:plus" class="mr-1" />
-          Tambah Produk
-        </AddButton>
+        <AddButton @click="handleAddNew"> Tambah Produk </AddButton>
       </div>
     </BaseCard>
 
@@ -151,7 +148,6 @@ const handleAddNew = () => {
       </NInput>
     </div>
 
-    <!-- Loading Skeleton -->
     <div
       v-if="loading"
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
@@ -164,7 +160,6 @@ const handleAddNew = () => {
       </div>
     </div>
 
-    <!-- Empty State -->
     <div
       v-else-if="filteredProducts.length === 0"
       class="flex flex-col items-center justify-center py-20"
@@ -185,7 +180,6 @@ const handleAddNew = () => {
       </NEmpty>
     </div>
 
-    <!-- Product Grid -->
     <div
       v-else
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
-import { ref } from "vue";
+import { NEmpty, NInput, useDialog, useMessage } from "naive-ui";
+import { computed, onMounted, ref } from "vue";
 import AddButton from "~/components/button/AddButton.vue";
-import BaseCard from "~/components/card/BaseCard.vue";
-import EmployeeModal from "~/components/modal/EmployeeModal.vue";
-import EmployeeTable from "~/components/table/EmployeeTable.vue";
+import EmployeeCard from "~/components/card/EmployeeCard.vue";
+import { useApi } from "~/composables/useApi";
 
 definePageMeta({
   layout: "dashboard",
@@ -15,42 +15,140 @@ useHead({
 });
 
 interface Employee {
-  id?: number;
-  nama: string;
-  telepon: string;
-  alamat: string;
-  foto?: string;
+  id: number;
+  name: string;
+  position: string;
+  department: string;
+  phone?: string;
+  email?: string;
+  salary?: string | number;
+  status: string;
+  photo?: string;
+  join_date?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
+const message = useMessage();
+const dialog = useDialog();
+const search = ref("");
+const employees = ref<Employee[]>([]);
+const loading = ref(false);
 const showModal = ref(false);
 const editingEmployee = ref<Employee | null>(null);
-const employees = ref<Employee[]>([]); // Data karyawan
 
-// Fungsi untuk buka modal tambah
-const handleAddNew = () => {
-  editingEmployee.value = null; // Reset untuk mode tambah
-  showModal.value = true;
+const { get, del } = useApi();
+
+const fetchEmployees = async () => {
+  try {
+    loading.value = true;
+    const res = await get<Employee[]>("/employees");
+    employees.value = res || [];
+  } catch (err: any) {
+    console.error("Error fetching employees:", err);
+    message.error(err?.message || "Gagal mengambil data karyawan");
+  } finally {
+    loading.value = false;
+  }
 };
 
-// Fungsi untuk buka modal edit (dipanggil dari table)
-const handleEdit = (employee: Employee) => {
-  editingEmployee.value = employee; // Set data untuk mode edit
-  showModal.value = true;
-};
+onMounted(() => {
+  fetchEmployees();
+});
 
-// Fungsi setelah berhasil simpan/update
+const filteredEmployees = computed(() =>
+  employees.value.filter(
+    (e) =>
+      e.name.toLowerCase().includes(search.value.toLowerCase()) ||
+      e.position.toLowerCase().includes(search.value.toLowerCase()) ||
+      e.department.toLowerCase().includes(search.value.toLowerCase())
+  )
+);
+
 const handleSuccess = () => {
-  // Refresh data karyawan
-  // fetchEmployees(); // Panggil API untuk reload data
-  console.log("Data berhasil disimpan, refresh table");
+  showModal.value = false;
+  editingEmployee.value = null;
+  fetchEmployees();
 };
+
+const handleDetail = (id?: number) => {
+  if (!id) {
+    message.warning("ID karyawan tidak valid");
+    return;
+  }
+
+  navigateTo(`/dashboard/employees/${id}`);
+};
+
+const handleEdit = (id?: number) => {
+  if (!id) {
+    message.warning("ID karyawan tidak valid");
+    return;
+  }
+
+  const employee = employees.value.find((e) => e.id === id);
+  if (employee) {
+    editingEmployee.value = employee;
+    showModal.value = true;
+  } else {
+    message.error("Karyawan tidak ditemukan");
+  }
+};
+
+const handleDelete = async (id?: number) => {
+  if (!id) {
+    message.warning("ID karyawan tidak valid");
+    return;
+  }
+
+  dialog.warning({
+    title: "Konfirmasi Hapus",
+    content:
+      "Apakah Anda yakin ingin menghapus data karyawan ini? Tindakan ini tidak dapat dibatalkan.",
+    positiveText: "Hapus",
+    negativeText: "Batal",
+    onPositiveClick: async () => {
+      try {
+        await del(`/employees/${id}`);
+        message.success("Data karyawan berhasil dihapus");
+        await fetchEmployees();
+      } catch (err: any) {
+        console.error("Error deleting employee:", err);
+        message.error(err?.message || "Gagal menghapus data karyawan");
+      }
+    },
+  });
+};
+
+const handleAddNew = () => {
+  editingEmployee.value = null;
+  showModal.value = true;
+};
+
+const activeEmployees = computed(
+  () => employees.value.filter((e) => e.status === "active").length
+);
+const inactiveEmployees = computed(
+  () => employees.value.filter((e) => e.status === "inactive").length
+);
+const onLeaveEmployees = computed(
+  () => employees.value.filter((e) => e.status === "leave").length
+);
 </script>
 
 <template>
-  <div class="p-9 space-y-3">
+  <div class="p-9">
     <BaseCard>
-      <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-primary">Karyawan</h1>
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-2xl font-bold text-primary">Daftar Karyawan</h1>
+          <div class="flex gap-4 text-sm mt-2">
+            <p class="text-gray-500">Total: {{ employees.length }} karyawan</p>
+            <p class="text-green-600">Aktif: {{ activeEmployees }}</p>
+            <p class="text-orange-600">Cuti: {{ onLeaveEmployees }}</p>
+            <p class="text-red-600">Tidak Aktif: {{ inactiveEmployees }}</p>
+          </div>
+        </div>
         <AddButton @click="handleAddNew">
           <Icon icon="mdi:plus" class="mr-1" />
           Tambah Karyawan
@@ -58,12 +156,85 @@ const handleSuccess = () => {
       </div>
     </BaseCard>
 
-    <EmployeeTable :employees="employees" @edit="handleEdit" />
+    <!-- Search Bar -->
+    <div class="mb-6">
+      <NInput
+        v-model:value="search"
+        placeholder="Cari karyawan berdasarkan nama, posisi, atau departemen..."
+        size="large"
+        clearable
+      >
+        <template #prefix>
+          <Icon icon="material-symbols:search" :width="20" />
+        </template>
+      </NInput>
+    </div>
 
-    <EmployeeModal
-      v-model:show-modal="showModal"
+    <!-- Loading Skeleton -->
+    <div
+      v-if="loading"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+    >
+      <div v-for="i in 8" :key="i" class="p-5 border rounded-xl animate-pulse">
+        <div class="flex justify-center mb-4">
+          <div class="w-32 h-32 bg-gray-200 rounded-full"></div>
+        </div>
+        <div class="h-4 bg-gray-200 rounded mb-2"></div>
+        <div class="h-4 bg-gray-200 rounded w-2/3 mb-2 mx-auto"></div>
+        <div class="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div
+      v-else-if="filteredEmployees.length === 0"
+      class="flex flex-col items-center justify-center py-20"
+    >
+      <NEmpty
+        :description="
+          search
+            ? `Tidak ada karyawan dengan kata kunci '${search}'`
+            : 'Belum ada data karyawan'
+        "
+      >
+        <template #extra>
+          <AddButton @click="handleAddNew">
+            <Icon icon="mdi:plus" class="mr-1" />
+            Tambah Karyawan
+          </AddButton>
+        </template>
+      </NEmpty>
+    </div>
+
+    <!-- Employee Grid -->
+    <div
+      v-else
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+    >
+      <EmployeeCard
+        v-for="employee in filteredEmployees"
+        :key="employee.id"
+        :id="employee.id"
+        :name="employee.name"
+        :position="employee.position"
+        :department="employee.department"
+        :phone="employee.phone"
+        :email="employee.email"
+        :salary="employee.salary"
+        :status="employee.status"
+        :photo="employee.photo"
+        :join_date="employee.join_date"
+        @detail="handleDetail"
+        @edit="handleEdit"
+        @delete="handleDelete"
+      />
+    </div>
+
+    <!-- Modal Form (TODO: Create EmployeeFormModal component) -->
+    <!-- <EmployeeFormModal
+      v-model:show="showModal"
       :employee="editingEmployee"
       @success="handleSuccess"
-    />
+    /> -->
   </div>
 </template>

@@ -52,7 +52,7 @@ const getStockLabel = (stock: number) => {
 
 <template>
   <div
-    class="relative p-5 border rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 bg-white"
+    class="relative p-5 cursor-pointer border rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 bg-white"
   >
     <!-- Image Section -->
     <div class="relative mb-4 group">
