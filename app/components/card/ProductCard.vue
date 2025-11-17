@@ -2,13 +2,15 @@
 import { Icon } from "@iconify/vue";
 import { NButton, NTag } from "naive-ui";
 
-interface Props {
-  id?: number;
+interface props {
+  id: number;
   name: string;
-  type: string; // Ganti dari 'category' ke 'type' sesuai backend
-  price: number;
+  type: string;
   stock: number;
+  price: string | number;
   photo?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 interface Emits {
@@ -17,15 +19,17 @@ interface Emits {
   (e: "delete", id?: number): void;
 }
 
-const props = defineProps<Props>();
+const props = defineProps<props>();
 const emit = defineEmits<Emits>();
 
-const formatPrice = (price: number) => {
+const formatPrice = (price: number | string) => {
+  const numPrice = typeof price === "string" ? parseFloat(price) : price;
+
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
     minimumFractionDigits: 0,
-  }).format(price);
+  }).format(numPrice);
 };
 
 const handleImageError = (e: Event) => {

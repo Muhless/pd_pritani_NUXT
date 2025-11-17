@@ -4,6 +4,7 @@ import { NEmpty, NInput, useDialog, useMessage } from "naive-ui";
 import { computed, onMounted, ref } from "vue";
 import AddButton from "~/components/button/AddButton.vue";
 import ProductCard from "~/components/card/ProductCard.vue";
+import ProductModal from "~/components/modal/ProductModal.vue";
 import { useApi } from "~/composables/useApi";
 
 definePageMeta({
@@ -19,8 +20,10 @@ interface Product {
   name: string;
   type: string;
   stock: number;
-  price: number;
+  price: string | number;
   photo?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 const message = useMessage();
@@ -29,8 +32,9 @@ const search = ref("");
 const products = ref<Product[]>([]);
 const loading = ref(false);
 const showModal = ref(false);
+const editingProduct = ref<Product | null>(null);
 
-const { get } = useApi();
+const { get, del } = useApi();
 
 const fetchProducts = async () => {
   try {
@@ -38,7 +42,8 @@ const fetchProducts = async () => {
     const res = await get<Product[]>("/products");
     products.value = res || [];
   } catch (err: any) {
-    message.error("Gagal mengambil data produk");
+    console.error("Error fetching products:", err);
+    message.error(err?.message || "Gagal mengambil data produk");
   } finally {
     loading.value = false;
   }
@@ -55,17 +60,63 @@ const filteredProducts = computed(() =>
 );
 
 const handleSuccess = () => {
+  showModal.value = false;
+  editingProduct.value = null;
   fetchProducts();
 };
 
 const handleDetail = (id?: number) => {
-  message.info(`Detail produk ID: ${id}`);
-  // TODO: Implementasi detail modal atau navigasi
+  if (!id) {
+    message.warning("ID produk tidak valid");
+    return;
+  }
+
+  navigateTo(`/dashboard/products/${id}`);
 };
 
 const handleEdit = (id?: number) => {
-  message.info(`Edit produk ID: ${id}`);
-  // TODO: Implementasi edit modal
+  if (!id) {
+    message.warning("ID produk tidak valid");
+    return;
+  }
+
+  const product = products.value.find((p) => p.id === id);
+  if (product) {
+    editingProduct.value = product;
+    showModal.value = true;
+  } else {
+    message.error("Produk tidak ditemukan");
+  }
+};
+
+const handleDelete = async (id?: number) => {
+  if (!id) {
+    message.warning("ID produk tidak valid");
+    return;
+  }
+
+  dialog.warning({
+    title: "Konfirmasi Hapus",
+    content:
+      "Apakah Anda yakin ingin menghapus produk ini? Tindakan ini tidak dapat dibatalkan.",
+    positiveText: "Hapus",
+    negativeText: "Batal",
+    onPositiveClick: async () => {
+      try {
+        await del(`/products/${id}`);
+        message.success("Produk berhasil dihapus");
+        await fetchProducts();
+      } catch (err: any) {
+        console.error("Error deleting product:", err);
+        message.error(err?.message || "Gagal menghapus produk");
+      }
+    },
+  });
+};
+
+const handleAddNew = () => {
+  editingProduct.value = null;
+  showModal.value = true;
 };
 </script>
 
@@ -79,7 +130,7 @@ const handleEdit = (id?: number) => {
             Total {{ products.length }} produk
           </p>
         </div>
-        <AddButton @click="showModal = true">
+        <AddButton @click="handleAddNew">
           <Icon icon="mdi:plus" class="mr-1" />
           Tambah Produk
         </AddButton>
@@ -126,7 +177,7 @@ const handleEdit = (id?: number) => {
         "
       >
         <template #extra>
-          <AddButton @click="showModal = true">
+          <AddButton @click="handleAddNew">
             <Icon icon="mdi:plus" class="mr-1" />
             Tambah Produk
           </AddButton>
@@ -150,10 +201,14 @@ const handleEdit = (id?: number) => {
         :photo="product.photo"
         @detail="handleDetail"
         @edit="handleEdit"
+        @delete="handleDelete"
       />
     </div>
 
-    <!-- Modal Form -->
-    <ProductFormModal v-model:show="showModal" @success="handleSuccess" />
+    <ProductModal
+      v-model:show-modal="showModal"
+      :product="editingProduct"
+      @success="handleSuccess"
+    />
   </div>
 </template>
