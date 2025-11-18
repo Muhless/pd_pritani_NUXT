@@ -173,7 +173,6 @@ const handleAddNew = () => {
       >
         <template #extra>
           <AddButton @click="handleAddNew">
-            <Icon icon="mdi:plus" class="mr-1" />
             Tambah Produk
           </AddButton>
         </template>

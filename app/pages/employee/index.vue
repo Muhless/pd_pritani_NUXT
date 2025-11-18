@@ -17,14 +17,10 @@ useHead({
 interface Employee {
   id: number;
   name: string;
-  position: string;
-  department: string;
-  phone?: string;
-  email?: string;
-  salary?: string | number;
-  status: string;
+  phone: string;
+  address: string;
   photo?: string;
-  join_date?: string;
+  status: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -57,11 +53,8 @@ onMounted(() => {
 });
 
 const filteredEmployees = computed(() =>
-  employees.value.filter(
-    (e) =>
-      e.name.toLowerCase().includes(search.value.toLowerCase()) ||
-      e.position.toLowerCase().includes(search.value.toLowerCase()) ||
-      e.department.toLowerCase().includes(search.value.toLowerCase())
+  employees.value.filter((e) =>
+    e.name.toLowerCase().includes(search.value.toLowerCase())
   )
 );
 
@@ -137,22 +130,19 @@ const onLeaveEmployees = computed(
 </script>
 
 <template>
-  <div class="p-9">
+  <div class="p-9 space-y-3">
     <BaseCard>
       <div class="flex justify-between items-center">
         <div>
           <h1 class="text-2xl font-bold text-primary">Daftar Karyawan</h1>
-          <div class="flex gap-4 text-sm mt-2">
+          <div class="flex gap-4 text-sm mt-1">
             <p class="text-gray-500">Total: {{ employees.length }} karyawan</p>
             <p class="text-green-600">Aktif: {{ activeEmployees }}</p>
             <p class="text-orange-600">Cuti: {{ onLeaveEmployees }}</p>
             <p class="text-red-600">Tidak Aktif: {{ inactiveEmployees }}</p>
           </div>
         </div>
-        <AddButton @click="handleAddNew">
-          <Icon icon="mdi:plus" class="mr-1" />
-          Tambah Karyawan
-        </AddButton>
+        <AddButton @click="handleAddNew"> Tambah Karyawan </AddButton>
       </div>
     </BaseCard>
 
@@ -198,10 +188,7 @@ const onLeaveEmployees = computed(
         "
       >
         <template #extra>
-          <AddButton @click="handleAddNew">
-            <Icon icon="mdi:plus" class="mr-1" />
-            Tambah Karyawan
-          </AddButton>
+          <AddButton @click="handleAddNew"> Tambah Karyawan </AddButton>
         </template>
       </NEmpty>
     </div>
@@ -216,25 +203,20 @@ const onLeaveEmployees = computed(
         :key="employee.id"
         :id="employee.id"
         :name="employee.name"
-        :position="employee.position"
-        :department="employee.department"
         :phone="employee.phone"
-        :email="employee.email"
-        :salary="employee.salary"
-        :status="employee.status"
+        :address="employee.address"
         :photo="employee.photo"
-        :join_date="employee.join_date"
+        :status="employee.status"
         @detail="handleDetail"
         @edit="handleEdit"
         @delete="handleDelete"
       />
     </div>
 
-    <!-- Modal Form (TODO: Create EmployeeFormModal component) -->
-    <!-- <EmployeeFormModal
-      v-model:show="showModal"
+    <EmployeeModal
+      v-model:showModal="showModal"
       :employee="editingEmployee"
       @success="handleSuccess"
-    /> -->
+    />
   </div>
 </template>

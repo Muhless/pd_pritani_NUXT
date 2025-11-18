@@ -5,14 +5,10 @@ import { NButton, NTag } from "naive-ui";
 interface Props {
   id: number;
   name: string;
-  position: string;
-  department: string;
   phone?: string;
-  email?: string;
-  salary?: string | number;
-  status: string; // active, inactive, leave
+  address?: string;
   photo?: string;
-  join_date?: string;
+  status: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -145,50 +141,11 @@ const getInitials = (name: string) => {
         <h2 class="font-bold text-xl line-clamp-1">
           {{ props.name }}
         </h2>
-        <p class="text-sm text-gray-500 mt-1">{{ props.position }}</p>
       </div>
 
-      <!-- Department Badge -->
-      <div class="flex justify-center">
-        <NTag type="info" size="small">
-          <Icon icon="mdi:office-building" class="mr-1" :width="14" />
-          {{ props.department }}
-        </NTag>
-      </div>
-
-      <!-- Details -->
-      <div class="pt-2 space-y-2 border-t">
-        <!-- Email -->
-        <div v-if="props.email" class="flex items-center gap-2 text-sm">
-          <Icon icon="mdi:email" :width="16" class="text-gray-400" />
-          <span class="text-gray-600 truncate">{{ props.email }}</span>
-        </div>
-
-        <!-- Phone -->
-        <div v-if="props.phone" class="flex items-center gap-2 text-sm">
-          <Icon icon="mdi:phone" :width="16" class="text-gray-400" />
-          <span class="text-gray-600">{{ props.phone }}</span>
-        </div>
-
-        <!-- Salary (Optional) -->
-        <div
-          v-if="props.salary"
-          class="flex items-center justify-between pt-2 border-t"
-        >
-          <span class="text-sm text-gray-500">Gaji</span>
-          <span class="font-bold text-primary">
-            {{ formatSalary(props.salary) }}
-          </span>
-        </div>
-
-        <!-- Join Date -->
-        <div
-          v-if="props.join_date"
-          class="flex items-center justify-between text-sm"
-        >
-          <span class="text-gray-500">Bergabung</span>
-          <span class="text-gray-700">{{ formatDate(props.join_date) }}</span>
-        </div>
+      <div v-if="props.phone" class="flex items-center gap-2 text-sm">
+        <Icon icon="mdi:phone" :width="16" class="text-gray-400" />
+        <span class="text-gray-600">{{ props.phone }}</span>
       </div>
     </div>
 
