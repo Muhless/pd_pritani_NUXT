@@ -4,10 +4,10 @@ import BaseCard from "~/components/card/BaseCard.vue";
 useHead({
   title: "Pengaturan | PG. Pritani",
 });
-
 definePageMeta({
   layout: "dashboard",
 });
+
 </script>
 
 <template>

@@ -43,7 +43,7 @@ const formatDate = (date?: string) => {
 
 const handleImageError = (e: Event) => {
   const target = e.target as HTMLImageElement;
-  target.src = "https://via.placeholder.com/400x400?text=No+Photo";
+  target.src = "https://placehold.co/400x400?text=No+Photo";
 };
 
 const getStatusTagType = (status: string) => {
@@ -71,10 +71,10 @@ const getInitials = (name: string) => {
 
 <template>
   <div
-    class="relative p-5 cursor-pointer border rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 bg-white"
+    class="relative p-5 cursor-pointer border rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 bg-white group"
   >
     <!-- Photo Section -->
-    <div class="relative mb-4 group">
+    <div class="relative mb-4">
       <!-- Photo or Avatar -->
       <div class="flex justify-center mb-3">
         <div class="relative">
@@ -100,37 +100,37 @@ const getInitials = (name: string) => {
               {{ getStatusLabel(props.status) }}
             </NTag>
           </div>
-        </div>
-      </div>
 
-      <!-- Hover Overlay -->
-      <div
-        class="absolute inset-0 bg-black/40 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2"
-      >
-        <NButton
-          circle
-          type="primary"
-          size="small"
-          @click.stop="emit('detail', props.id)"
-        >
-          <Icon icon="mdi:eye" :width="18" />
-        </NButton>
-        <NButton
-          circle
-          type="info"
-          size="small"
-          @click.stop="emit('edit', props.id)"
-        >
-          <Icon icon="mdi:pencil" :width="18" />
-        </NButton>
-        <NButton
-          circle
-          type="error"
-          size="small"
-          @click.stop="emit('delete', props.id)"
-        >
-          <Icon icon="mdi:delete" :width="18" />
-        </NButton>
+          <!-- Hover Overlay (Hanya di atas foto) -->
+          <div
+            class="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2"
+          >
+            <NButton
+              circle
+              type="primary"
+              size="small"
+              @click.stop="emit('detail', props.id)"
+            >
+              <Icon icon="mdi:eye" :width="18" />
+            </NButton>
+            <NButton
+              circle
+              type="info"
+              size="small"
+              @click.stop="emit('edit', props.id)"
+            >
+              <Icon icon="mdi:pencil" :width="18" />
+            </NButton>
+            <NButton
+              circle
+              type="error"
+              size="small"
+              @click.stop="emit('delete', props.id)"
+            >
+              <Icon icon="mdi:delete" :width="18" />
+            </NButton>
+          </div>
+        </div>
       </div>
     </div>
 

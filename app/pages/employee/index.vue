@@ -4,6 +4,7 @@ import { NEmpty, NInput, useDialog, useMessage } from "naive-ui";
 import { computed, onMounted, ref } from "vue";
 import AddButton from "~/components/button/AddButton.vue";
 import EmployeeCard from "~/components/card/EmployeeCard.vue";
+import EmployeeModal from "~/components/modal/EmployeeModal.vue";
 import { useApi } from "~/composables/useApi";
 
 definePageMeta({
