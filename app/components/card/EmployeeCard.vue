@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 import { NButton, NTag } from "naive-ui";
+import { computed } from "vue";
 
 interface Props {
   id: number;
@@ -22,28 +23,20 @@ interface Emits {
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const formatSalary = (salary: number | string) => {
-  const numSalary = typeof salary === "string" ? parseFloat(salary) : salary;
+// ✅ Get base URL from runtime config
+const config = useRuntimeConfig();
+const baseURL = config.public.apiBase || 'http://localhost:8080';
 
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-  }).format(numSalary);
-};
-
-const formatDate = (date?: string) => {
-  if (!date) return "-";
-  return new Intl.DateTimeFormat("id-ID", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(new Date(date));
-};
+// ✅ Computed untuk full photo URL
+const fullPhotoUrl = computed(() => {
+  if (!props.photo) return '';
+  if (props.photo.startsWith('http')) return props.photo;
+  return `${baseURL}${props.photo}`;
+});
 
 const handleImageError = (e: Event) => {
   const target = e.target as HTMLImageElement;
-  target.src = "https://placehold.co/400x400?text=No+Photo";
+  target.src = "https://placehold.co/400x400/3b82f6/ffffff?text=No+Photo";
 };
 
 const getStatusTagType = (status: string) => {
@@ -71,101 +64,122 @@ const getInitials = (name: string) => {
 
 <template>
   <div
-    class="relative p-5 cursor-pointer border rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 bg-white group"
+    class="relative overflow-hidden rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 bg-white border border-gray-100 group"
   >
-    <!-- Photo Section -->
-    <div class="relative mb-4">
-      <!-- Photo or Avatar -->
-      <div class="flex justify-center mb-3">
-        <div class="relative">
-          <img
-            v-if="props.photo"
-            :src="props.photo"
-            :alt="props.name"
-            class="w-32 h-32 object-cover rounded-full border-4 border-gray-100"
-            @error="handleImageError"
-          />
-          <div
-            v-else
-            class="w-32 h-32 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center border-4 border-gray-100"
-          >
-            <span class="text-white text-3xl font-bold">
-              {{ getInitials(props.name) }}
-            </span>
-          </div>
-
-          <!-- Status Badge -->
-          <div class="absolute bottom-0 right-0">
-            <NTag :type="getStatusTagType(props.status)" size="small" round>
-              {{ getStatusLabel(props.status) }}
-            </NTag>
-          </div>
-
-          <!-- Hover Overlay (Hanya di atas foto) -->
-          <div
-            class="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2"
-          >
-            <NButton
-              circle
-              type="primary"
-              size="small"
-              @click.stop="emit('detail', props.id)"
-            >
-              <Icon icon="mdi:eye" :width="18" />
-            </NButton>
-            <NButton
-              circle
-              type="info"
-              size="small"
-              @click.stop="emit('edit', props.id)"
-            >
-              <Icon icon="mdi:pencil" :width="18" />
-            </NButton>
-            <NButton
-              circle
-              type="error"
-              size="small"
-              @click.stop="emit('delete', props.id)"
-            >
-              <Icon icon="mdi:delete" :width="18" />
-            </NButton>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Employee Info -->
-    <div class="space-y-3">
-      <!-- Name -->
-      <div class="text-center">
-        <h2 class="font-bold text-xl line-clamp-1">
-          {{ props.name }}
-        </h2>
-      </div>
-
-      <div v-if="props.phone" class="flex items-center gap-2 text-sm">
-        <Icon icon="mdi:phone" :width="16" class="text-gray-400" />
-        <span class="text-gray-600">{{ props.phone }}</span>
-      </div>
-    </div>
-
-    <!-- Actions (Mobile) -->
-    <div class="mt-4 flex gap-2 sm:hidden">
+    <!-- ✨ Decorative Background -->
+    <div class="absolute top-0 left-0 right-0 h-24 bg-gradient-to-br from-primary/10 to-blue-500/10"></div>
+    
+    <!-- ✨ Action Buttons - Top Right -->
+    <div class="absolute top-3 right-3 z-30 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
       <NButton
+        circle
         type="primary"
         size="small"
-        block
         @click.stop="emit('detail', props.id)"
+        class="shadow-lg"
       >
-        <Icon icon="mdi:eye" class="mr-1" />
-        Detail
+        <Icon icon="mdi:eye" :width="16" />
       </NButton>
-      <NButton type="info" size="small" @click.stop="emit('edit', props.id)">
-        <Icon icon="mdi:pencil" />
+      <NButton
+        circle
+        type="info"
+        size="small"
+        @click.stop="emit('edit', props.id)"
+        class="shadow-lg"
+      >
+        <Icon icon="mdi:pencil" :width="16" />
       </NButton>
-      <NButton type="error" size="small" @click.stop="emit('delete', props.id)">
-        <Icon icon="mdi:delete" />
+      <NButton
+        circle
+        type="error"
+        size="small"
+        @click.stop="emit('delete', props.id)"
+        class="shadow-lg"
+      >
+        <Icon icon="mdi:delete" :width="16" />
       </NButton>
     </div>
+    
+    <!-- Content -->
+    <div class="relative p-6">
+      <!-- Photo Section -->
+      <div class="flex justify-center mb-4">
+        <div class="relative">
+          <!-- Photo Container with Ring -->
+          <div class="relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary to-blue-600 rounded-full blur-md opacity-30 group-hover:opacity-50 transition-opacity"></div>
+            
+            <div class="relative">
+              <img
+                v-if="fullPhotoUrl"
+                :src="fullPhotoUrl"
+                :alt="props.name"
+                class="w-28 h-28 object-cover rounded-full border-4 border-white shadow-lg relative z-10"
+                @error="handleImageError"
+              />
+              <div
+                v-else
+                class="w-28 h-28 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center border-4 border-white shadow-lg relative z-10"
+              >
+                <span class="text-white text-2xl font-bold">
+                  {{ getInitials(props.name) }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hover Action Buttons -->
+        </div>
+      </div>
+
+      <!-- Employee Info -->
+      <div class="text-center space-y-3">
+        <!-- Name -->
+        <h2 class="font-bold text-lg text-gray-800 line-clamp-1 group-hover:text-primary transition-colors">
+          {{ props.name }}
+        </h2>
+
+        <!-- Status Badge -->
+        <div class="flex justify-center">
+          <NTag 
+            :type="getStatusTagType(props.status)" 
+            size="medium" 
+            round
+            class="shadow-sm"
+          >
+            <template #icon>
+              <Icon 
+                :icon="props.status === 'active' ? 'mdi:check-circle' : props.status === 'leave' ? 'mdi:clock-outline' : 'mdi:close-circle'" 
+                :width="14" 
+              />
+            </template>
+            {{ getStatusLabel(props.status) }}
+          </NTag>
+        </div>
+
+        <!-- Phone -->
+        <div 
+          v-if="props.phone" 
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-full text-sm text-gray-600"
+        >
+          <Icon icon="mdi:phone" :width="14" class="text-primary" />
+          <span>{{ props.phone }}</span>
+        </div>
+
+        <!-- Address -->
+        <div 
+          v-if="props.address" 
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-full text-xs text-gray-500 max-w-full"
+        >
+          <Icon icon="mdi:map-marker" :width="12" class="text-gray-400 flex-shrink-0" />
+          <span class="line-clamp-1">{{ props.address }}</span>
+        </div>
+      </div>
+
+      <!-- Divider -->
+    </div>
+
+    <!-- ✨ Hover Effect Border -->
+    <div class="absolute inset-0 border-2 border-primary rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
   </div>
 </template>
