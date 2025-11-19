@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useDialog, useMessage } from "naive-ui";
 import AddButton from "~/components/button/AddButton.vue";
 import BaseCard from "~/components/card/BaseCard.vue";
 import CustomerTable from "~/components/table/CustomerTable.vue";
@@ -9,6 +10,45 @@ definePageMeta({
 useHead({
   title: "Pelanggan | PG. Pritani",
 });
+
+interface Customer {
+  id: number;
+  name: string;
+  phone?: string;
+  address?: string;
+}
+
+const message = useMessage();
+const dialog = useDialog();
+const search = ref("");
+const customers = ref<Customer[]>([]);
+const loading = ref(false);
+const showModal = ref(false);
+const editingCustomer = ref<Customer | null>(null);
+
+const { get, del } = useApi();
+
+const fetchCustomers = async () => {
+  try {
+    loading.value = true;
+    const res = await get<Customer[]>("/customers");
+    customers.value = res || [];
+  } catch (err: any) {
+    console.error("Error fetching Customer data", err);
+    message.error(err?.message || "Gagal mengambil data pelanggan");
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchCustomers();
+});
+
+const handleAddNew = () => {
+  editingCustomer.value = null;
+  showModal.value = true;
+};
 </script>
 
 <template>
@@ -16,11 +56,11 @@ useHead({
     <BaseCard>
       <div class="flex justify-between items-center">
         <h1 class="text-2xl font-bold text-primary">Pelanggan</h1>
-        <AddButton label="Produk" />
+        <AddButton label="Pelanggan" @click="handleAddNew"> </AddButton>
       </div>
     </BaseCard>
     <BaseCard>
-      <CustomerTable />
+      <CustomerTable :customers="customers" :loading="loading" />
     </BaseCard>
   </div>
 </template>

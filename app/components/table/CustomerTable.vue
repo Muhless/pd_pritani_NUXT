@@ -13,16 +13,15 @@ const fetchEmployees = async () => {
     );
     const json = await res.json();
     employees.value = json.data || [];
-    totalItems.value = json.data || 0;
+    totalItems.value = json.total || 0;
   } catch (error) {
     console.error("Failed to fetch employees", error);
   }
 };
 
-onMounted(employees);
-watch(page, () => {
-  fetchEmployees;
-});
+onMounted(fetchEmployees);
+
+watch(page, fetchEmployees);
 
 const StatusClass = (status: string) => {
   return status === "active" ? "text-green-600" : "text-red-500";
@@ -78,7 +77,7 @@ const StatusClass = (status: string) => {
           >
             <button
               class="flex items-center justify-center w-full h-full"
-              :class="$emit('delete', item.id)"
+              @click="$emit('delete', item.id)"
             >
               <Icon icon="ci:trash-full" class="w-5 h-5" />
             </button>
