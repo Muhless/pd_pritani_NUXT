@@ -2,6 +2,7 @@
 import { useDialog, useMessage } from "naive-ui";
 import AddButton from "~/components/button/AddButton.vue";
 import BaseCard from "~/components/card/BaseCard.vue";
+import CustomerModal from "~/components/modal/CustomerModal.vue";
 import CustomerTable from "~/components/table/CustomerTable.vue";
 
 definePageMeta({
@@ -49,6 +50,13 @@ const handleAddNew = () => {
   editingCustomer.value = null;
   showModal.value = true;
 };
+
+const handleSuccess = () => {
+  showModal.value = false;
+  editingCustomer.value = null;
+  fetchCustomers();
+};
+
 </script>
 
 <template>
@@ -62,5 +70,11 @@ const handleAddNew = () => {
     <BaseCard>
       <CustomerTable :customers="customers" :loading="loading" />
     </BaseCard>
+
+    <CustomerModal
+      v-model:showModal="showModal"
+      :customer="editingCustomer"
+      @success="handleSuccess"
+    />
   </div>
 </template>
