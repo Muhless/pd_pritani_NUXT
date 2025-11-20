@@ -14,26 +14,24 @@ export const useApi = () => {
    */
   async function get<T>(endpoint: string): Promise<T> {
     try {
-      console.log('🔵 Fetching:', `${baseURL}${endpoint}`);
-      
+      console.log("🔵 Fetching:", `${baseURL}${endpoint}`);
+
       const response = await $fetch<ApiResponse<T>>(`${baseURL}${endpoint}`, {
         method: "GET",
       });
-      
-      console.log('✅ Response:', response);
-      
+
+      console.log("✅ Response:", response);
+
       // Return data dari wrapper
       if (response.success && response.data) {
         return response.data;
       }
-      
+
       throw new Error(response.message || "Response tidak valid");
     } catch (err: any) {
-      console.error('❌ Error:', err);
+      console.error("❌ Error:", err);
       throw new Error(
-        err?.data?.message || 
-        err?.message || 
-        "Gagal mengambil data"
+        err?.data?.message || err?.message || "Gagal mengambil data"
       );
     }
   }
@@ -43,27 +41,24 @@ export const useApi = () => {
    */
   async function post<T>(endpoint: string, body?: any): Promise<T> {
     try {
-      console.log('🔵 Posting:', `${baseURL}${endpoint}`, body);
-      
+      console.log("🔵 Posting:", `${baseURL}${endpoint}`, body);
+
       const response = await $fetch<ApiResponse<T>>(`${baseURL}${endpoint}`, {
         method: "POST",
         body: body,
       });
-      
-      console.log('✅ Response:', response);
-      
+
+      console.log("✅ Response:", response);
+
       if (response.success && response.data) {
         return response.data;
       }
-      
+
       throw new Error(response.message || "Response tidak valid");
     } catch (err: any) {
-      console.error('❌ Error:', err);
-      throw new Error(
-        err?.data?.message || 
-        err?.message || 
-        "Gagal menambahkan data"
-      );
+      console.error("❌ Error:", err);
+      const msg = err?.data?.message || err?.message || "terjadi kesalahan";
+      throw new Error(msg);
     }
   }
 
@@ -72,26 +67,24 @@ export const useApi = () => {
    */
   async function put<T>(endpoint: string, body?: any): Promise<T> {
     try {
-      console.log('🔵 Putting:', `${baseURL}${endpoint}`, body);
-      
+      console.log("🔵 Putting:", `${baseURL}${endpoint}`, body);
+
       const response = await $fetch<ApiResponse<T>>(`${baseURL}${endpoint}`, {
         method: "PUT",
         body: body,
       });
-      
-      console.log('✅ Response:', response);
-      
+
+      console.log("✅ Response:", response);
+
       if (response.success && response.data) {
         return response.data;
       }
-      
+
       throw new Error(response.message || "Response tidak valid");
     } catch (err: any) {
-      console.error('❌ Error:', err);
+      console.error("❌ Error:", err);
       throw new Error(
-        err?.data?.message || 
-        err?.message || 
-        "Gagal mengupdate data"
+        err?.data?.message || err?.message || "Gagal mengupdate data"
       );
     }
   }
@@ -101,26 +94,24 @@ export const useApi = () => {
    */
   async function patch<T>(endpoint: string, body?: any): Promise<T> {
     try {
-      console.log('🔵 Patching:', `${baseURL}${endpoint}`, body);
-      
+      console.log("🔵 Patching:", `${baseURL}${endpoint}`, body);
+
       const response = await $fetch<ApiResponse<T>>(`${baseURL}${endpoint}`, {
         method: "PATCH",
         body: body,
       });
-      
-      console.log('✅ Response:', response);
-      
+
+      console.log("✅ Response:", response);
+
       if (response.success && response.data) {
         return response.data;
       }
-      
+
       throw new Error(response.message || "Response tidak valid");
     } catch (err: any) {
-      console.error('❌ Error:', err);
+      console.error("❌ Error:", err);
       throw new Error(
-        err?.data?.message || 
-        err?.message || 
-        "Gagal mengupdate data"
+        err?.data?.message || err?.message || "Gagal mengupdate data"
       );
     }
   }
@@ -130,34 +121,32 @@ export const useApi = () => {
    */
   async function del<T>(endpoint: string): Promise<T> {
     try {
-      console.log('🔵 Deleting:', `${baseURL}${endpoint}`);
-      
+      console.log("🔵 Deleting:", `${baseURL}${endpoint}`);
+
       const response = await $fetch<ApiResponse<T>>(`${baseURL}${endpoint}`, {
         method: "DELETE",
       });
-      
-      console.log('✅ Response:', response);
-      
+
+      console.log("✅ Response:", response);
+
       if (response.success) {
         return response.data;
       }
-      
+
       throw new Error(response.message || "Response tidak valid");
     } catch (err: any) {
-      console.error('❌ Error:', err);
+      console.error("❌ Error:", err);
       throw new Error(
-        err?.data?.message || 
-        err?.message || 
-        "Gagal menghapus data"
+        err?.data?.message || err?.message || "Gagal menghapus data"
       );
     }
   }
 
-  return { 
-    get, 
-    post, 
+  return {
+    get,
+    post,
     put,
-    patch, 
-    del 
+    patch,
+    del,
   };
 };

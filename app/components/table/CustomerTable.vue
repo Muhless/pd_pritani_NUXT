@@ -1,97 +1,67 @@
 <script setup lang="ts">
-import { Icon } from "@iconify/vue";
+interface Customer {
+  id: number;
+  name: string;
+  phone: string;
+  address: string;
+  company: string;
+}
 
-const page = ref(1);
-const pageSize = 10;
-const totalItems = ref(0);
-const employees = ref(<any[]>[]);
+const props = defineProps<{
+  customers: Customer[];
+  page: number;
+  pageSize: number;
+  totalItems: number;
+  loading: boolean;
+}>();
 
-const fetchEmployees = async () => {
-  try {
-    const res = await fetch(
-      `http://localhost:8080/employees?page=${page.value}&limit=${pageSize}`
-    );
-    const json = await res.json();
-    employees.value = json.data || [];
-    totalItems.value = json.total || 0;
-  } catch (error) {
-    console.error("Failed to fetch employees", error);
-  }
-};
-
-onMounted(fetchEmployees);
-
-watch(page, fetchEmployees);
-
-const StatusClass = (status: string) => {
-  return status === "active" ? "text-green-600" : "text-red-500";
-};
+const emit = defineEmits<{
+  (e: "page-change", page: number): void;
+  (e: "edit", id: number): void;
+  (e: "delete", id: number): void;
+}>();
 </script>
 
 <template>
-  <n-table
-    :bordered="false"
-    :single-line="false"
-    class="overflow-hidden rounded-xl shadow-lg"
-  >
-    <thead class="text-white">
+  <n-table :bordered="false" :single-line="false">
+    <thead>
       <tr>
-        <th class="px-4 py-3 text-left">No</th>
-        <th class="px-4 py-3 text-left">Nama</th>
-        <th class="px-4 py-3 text-left">Nomor Telepon</th>
-        <th class="px-4 py-3 text-left">Alamat</th>
-        <th class="px-4 py-3 text-left">Status</th>
-        <th class="px-4 py-3 text-left">Aksi</th>
+        <th>No</th>
+        <th>Nama</th>
+        <th>Telepon</th>
+        <th>Alamat</th>
+        <th>Perusahaan</th>
+        <th>Aksi</th>
       </tr>
     </thead>
-    <tbody>
-      <tr
-        v-for="(item, index) in employees"
-        :key="item.id"
-        class="transition hover:bg-gray-100"
-      >
-        <td class="px-4 py-3">{{ (page - 1) * pageSize + (index + 1) }}</td>
-        <td class="px-4 py-3">{{ item.name }}</td>
-        <td class="px-4 py-3">{{ item.phone }}</td>
-        <td class="px-4 py-3">{{ item.address }}</td>
-        <td
-          class="px-4 py-3 font-semibold text-green-600"
-          :class="StatusClass(item.status)"
-        >
-          {{ item.status === "active" ? "Aktif" : "Tidak Aktif" }}
-        </td>
-        <td class="flex justify-center gap-2">
-          <div
-            class="flex items-center justify-center bg-yellow-400 rounded size-8"
-          >
-            <button
-              class="flex items-center justify-center w-full h-full"
-              @click="$emit('edit', item.id)"
-            >
-              <Icon icon="ci:edit" class="w-5 h-5" />
-            </button>
-          </div>
 
-          <div
-            class="flex items-center justify-center bg-red-400 rounded size-8"
-          >
-            <button
-              class="flex items-center justify-center w-full h-full"
-              @click="$emit('delete', item.id)"
-            >
-              <Icon icon="ci:trash-full" class="w-5 h-5" />
-            </button>
-          </div>
+    <tbody>
+      <tr v-for="(item, index) in props.customers" :key="item.id">
+        <td>{{ (props.page - 1) * props.pageSize + index + 1 }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.phone }}</td>
+        <td>{{ item.address }}</td>
+        <td>{{ item.company }}</td>
+
+        <td>
+          <button @click="emit('edit', item.id)">
+            <Icon icon="ci:edit" />
+          </button>
+
+          <button @click="emit('delete', item.id)">
+            <Icon icon="ci:trash-full" />
+          </button>
         </td>
       </tr>
     </tbody>
   </n-table>
+
   <div class="flex justify-center py-3">
     <n-pagination
-      v-model:page="page"
-      :page-size="pageSize"
-      :item-count="totalItems"
-      show-size-picker="false"
+      :page="props.page"
+      :page-size="props.pageSize"
+      :item-count="props.totalItems"
+      @update:page="emit('page-change', $event)"
     />
   </div>
 </template>

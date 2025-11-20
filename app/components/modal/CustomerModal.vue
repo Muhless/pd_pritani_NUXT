@@ -113,7 +113,7 @@ watch(
 
 const closeModal = () => {
   emit("update:showModal", false);
-  setTimeout(() => resetForm(), 200);
+  resetForm();
 };
 
 const handleSubmit = async () => {
@@ -144,7 +144,7 @@ const handleSubmit = async () => {
     closeModal();
   } catch (err: any) {
     console.error(err);
-    message.error(err?.response?.data?.message || "Gagal menyimpan data");
+    message.error(err.message || "Gagal menyimpan data");
   } finally {
     loading.value = false;
   }
