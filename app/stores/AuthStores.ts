@@ -27,29 +27,33 @@ export const useAuthStore = defineStore("auth", {
   },
 
   actions: {
-    // 🔹 LOGIN
     async login(username: string, password: string) {
       try {
         this.loading = true;
         const config = useRuntimeConfig();
-        const res = await fetch(`${config.public.apiBase}/auth/login`, {
+        const res = await fetch(`${config.public.apiBase}/api/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password }),
         });
 
-        const data = await res.json();
-        console.log("✅ LOGIN RESPONSE:", data);
+        const text = await res.text();
+        console.log("🔥 RAW RESPONSE:", text);
+
+        let data: any = {};
+        try {
+          data = JSON.parse(text);
+        } catch {
+          throw new Error("Backend tidak mengembalikan JSON");
+        }
 
         if (!res.ok) {
           throw new Error(data.message || "Login gagal");
         }
 
-        // ✅ Simpan ke state
         this.token = data.token;
         this.user = data.user;
 
-        // ✅ Simpan ke localStorage (PENTING!)
         this.saveToStorage();
 
         console.log("✅ Login berhasil, state:", {
@@ -65,7 +69,6 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    // 🔹 LOGOUT
     logout() {
       this.token = null;
       this.user = null;
@@ -73,7 +76,6 @@ export const useAuthStore = defineStore("auth", {
       console.log("✅ Logout berhasil");
     },
 
-    // 🔹 SAVE TO LOCALSTORAGE
     saveToStorage() {
       if (process.client) {
         try {
@@ -97,7 +99,6 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    // 🔹 LOAD FROM LOCALSTORAGE
     loadFromStorage() {
       if (process.client) {
         try {
@@ -131,7 +132,6 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    // 🔹 CLEAR STORAGE
     clearStorage() {
       if (process.client) {
         localStorage.removeItem("token");
