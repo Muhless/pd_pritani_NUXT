@@ -70,11 +70,11 @@
           <Icon v-if="!auth.loading" icon="mdi:arrow-right" class="w-5 h-5" />
         </button>
 
-        <p class="text-gray-300">
+        <p class="text-gray-500">
           Belum punya akun?
           <NuxtLink
-            to="/register"
-            class="underline hover:text-green-400 transition"
+            to="/auth/register"
+            class="underline hover:text-green-600 transition"
           >
             Buat Disini
           </NuxtLink>

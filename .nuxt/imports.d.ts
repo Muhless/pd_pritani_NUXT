@@ -34,6 +34,7 @@ export { useApi } from '../app/composables/useApi';
 export { useProducts } from '../app/composables/useProducts';
 export { api } from '../app/utils/api';
 export { useAuthStore } from '../app/stores/AuthStores';
+export { useRegisterStore } from '../app/stores/RegisterStore';
 export { defineStore, acceptHMRUpdate, usePinia, storeToRefs } from '../node_modules/@pinia/nuxt/dist/runtime/composables';
 export { storages as piniaPluginPersistedstate } from '../node_modules/pinia-plugin-persistedstate/dist/nuxt/runtime/storages';
 export { useNuxtDevTools } from '../node_modules/nuxt/node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';

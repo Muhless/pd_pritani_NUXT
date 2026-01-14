@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { navigateTo, useHead } from "#app";
+import { useHead } from "#app";
 import { ref } from "vue";
 import BaseSelect from "~/components/input/BaseSelect.vue";
 
@@ -12,7 +12,7 @@ const password = ref("");
 const role = ref("");
 const roleOptions = [
   { label: "Admin", value: "admin" },
-  { label: "Employee", value: "employee" },
+  { label: "Karyawan", value: "employee" },
 ];
 
 const name = ref("");
@@ -23,30 +23,20 @@ const address = ref("");
 const loading = ref(false);
 const error = ref("");
 
-const handleRegister = async () => {
-  loading.value = true;
+const submitRegister = async () => {
   error.value = "";
-
-  try {
-    await api("/auth/register", {
-      method: "POST",
-      body: JSON.stringify({
-        username: username.value,
-        password: password.value,
-        role: role.value,
-        name: name.value,
-        email: email.value,
-        phone: phone.value,
-        address: address.value,
-      }),
-    });
-
-    navigateTo("/login");
-  } catch (err: any) {
-    error.value = err.message || "Registrasi gagal";
-  } finally {
-    loading.value = false;
+  if (!username.value || !password.value || !role.value) {
+    error.value = "Semua data wajib";
+    return;
   }
+
+  registerStore.setStep1({
+    username: username.value,
+    password: password.value,
+    role: role.value,
+  });
+
+  navigateTo("/auth/register/profile");
 };
 </script>
 
@@ -66,37 +56,31 @@ const handleRegister = async () => {
       </div>
 
       <form
-        @submit.prevent="handleRegister"
+        @submit.prevent="submitRegister"
         class="flex flex-col space-y-5 w-full"
       >
         <BaseInput
-          v-model="username"
-          id="username"
-          label="Username"
-          placeholder="Masukkan username anda"
+          v-model="name"
+          id="name"
+          label="Nama"
+          placeholder="Masukkan nama anda"
         />
+
         <BaseInput
-          v-model="password"
-          id="password"
-          label="Password"
-          type="password"
-          placeholder="*********"
+          v-model="phone"
+          id="phone"
+          label="Nomor Telepon"
+          placeholder="Masukkan nomor telepon anda"
         />
 
-        <BaseSelect
-          v-model="role"
-          id="role"
-          name="role"
-          label="Posisi"
-          :options="roleOptions"
-          placeholder="Pilih Posisi"
+        <BaseInput
+          v-model="address"
+          id="address"
+          label="Alamat"
+          placeholder="Masukkan alamat anda"
+          as="textarea"
         />
 
-        <p
-          class="text-gray-400 text-sm hover:cursor-pointer hover:text-green-400 transition"
-        >
-          Lupa password?
-        </p>
         <p v-if="error" class="mt-2 text-sm text-red-500">{{ error }}</p>
 
         <button
@@ -107,13 +91,13 @@ const handleRegister = async () => {
           {{ loading ? "Memproses..." : "Daftar" }}
         </button>
 
-        <p class="text-gray-300">
-          Belum punya akun?
+        <p class="text-gray-500">
+          Sudah punya akun?
           <NuxtLink
-            to="/register"
-            class="underline hover:text-green-400 transition"
+            to="/auth/login"
+            class="underline hover:text-green-600 transition"
           >
-            Buat Disini
+            Login Disini
           </NuxtLink>
         </p>
       </form>

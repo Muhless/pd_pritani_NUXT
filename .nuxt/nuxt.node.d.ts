@@ -1,6 +1,6 @@
 /// <reference types="@nuxtjs/tailwindcss" />
-/// <reference types="@pinia/nuxt" />
 /// <reference types="@nuxt/telemetry" />
+/// <reference types="@pinia/nuxt" />
 /// <reference types="pinia-plugin-persistedstate" />
 /// <reference types="@nuxt/devtools" />
 /// <reference path="types/modules.d.ts" />

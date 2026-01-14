@@ -1,4 +1,3 @@
-// middleware/auth.global.ts
 let isLoaded = false;
 let navigationCount = 0;
 
@@ -8,13 +7,14 @@ export default defineNuxtRouteMiddleware((to, from) => {
   console.log(`
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔢 Navigation #${navigationCount}
-📍 FROM: ${from?.path || "initial"} 
+📍 FROM: ${from?.path || "initial"}
 📍 TO: ${to.path}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   `);
 
   const authStore = useAuthStore();
 
+  // Load auth dari storage sekali saja
   if (!isLoaded) {
     console.log("🔄 First load - reading from storage");
     authStore.loadFromStorage();
@@ -26,39 +26,40 @@ export default defineNuxtRouteMiddleware((to, from) => {
     user: authStore.user?.username,
   });
 
-  const publicPages = ["/login", "/register"];
+  /** 🔓 PUBLIC ROUTES */
+  const publicPages = [
+    "/auth/login",
+    "/auth/register",
+    "/auth/register/profile",
+  ];
   const isPublicPage = publicPages.includes(to.path);
 
   console.log("📄 Page Check:", {
     path: to.path,
-    isPublicPage: isPublicPage,
+    isPublicPage,
   });
 
-  // CRITICAL: Return early untuk prevent multiple navigations
-
-  // 1. Handle root
+  /** 🏠 ROOT */
   if (to.path === "/") {
-    const target = authStore.isAuthenticated ? "/home" : "/login";
+    const target = authStore.isAuthenticated ? "/home" : "/auth/login";
     console.log("🏠 Root redirect →", target);
     return navigateTo(target);
   }
 
-  // 2. Public pages + authenticated = go to home
+  /** 🚫 SUDAH LOGIN TAPI KE LOGIN / REGISTER */
   if (isPublicPage && authStore.isAuthenticated) {
     console.log("🚫 Public page while authenticated → /home");
     return navigateTo("/home");
   }
 
-  // 3. Protected pages + not authenticated = go to login
+  /** 🔒 BELUM LOGIN TAPI KE HALAMAN PROTECTED */
   if (!isPublicPage && !authStore.isAuthenticated) {
-    console.log("🚫 Protected page while not authenticated → /login");
-    return navigateTo("/login");
+    console.log("🚫 Protected page while not authenticated → /auth/login");
+    return navigateTo("/auth/login");
   }
 
-  // 4. All good - allow navigation
   console.log("✅ Navigation allowed to:", to.path);
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 
-  // IMPORTANT: Explicitly return undefined untuk allow navigation
-  return undefined;
+  return;
 });

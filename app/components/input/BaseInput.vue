@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 interface Props {
   modelValue: string;
@@ -9,13 +9,18 @@ interface Props {
   placeholder?: string;
   name?: string;
   id?: string;
+  as?: "input" | "textarea";
+  rows?: number;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits(["update:modelValue"]);
 
 const showPassword = ref(false);
-const isPassword = computed(() => props.type === "password");
+
+const isPassword = computed(
+  () => props.type === "password" && props.as !== "textarea"
+);
 
 const inputType = computed(() =>
   isPassword.value
@@ -29,7 +34,26 @@ const inputType = computed(() =>
 <template>
   <div class="flex flex-col space-y-1 w-full relative">
     <div class="relative">
+      <!-- TEXTAREA (Alamat) -->
+      <textarea
+        v-if="as === 'textarea'"
+        :id="id"
+        :name="name"
+        :rows="rows || 4"
+        :placeholder="placeholder"
+        class="py-3 px-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+        :value="modelValue"
+        @input="
+          emit(
+            'update:modelValue',
+            ($event.target as HTMLTextAreaElement).value
+          )
+        "
+      />
+
+      <!-- INPUT -->
       <input
+        v-else
         :id="id"
         :name="name"
         :type="inputType"
