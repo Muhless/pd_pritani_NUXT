@@ -4,9 +4,9 @@
   >
     <!-- Header -->
     <div class="flex flex-col items-center">
-      <div class="mt-10">
+      <a href="/home" class="mt-10">
         <img src="/images/logo-pritani.png" alt="" class="size-12" />
-      </div>
+      </a>
 
       <!-- Menu -->
       <nav class="mt-6 space-y-5">
@@ -55,6 +55,9 @@ const menuItems = [
 
 const handleLogout = () => {
   auth.logout();
-  router.push("/login");
+
+  setTimeout(() => {
+    router.push("/login");
+  }, 300);
 };
 </script>

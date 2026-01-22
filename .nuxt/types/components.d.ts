@@ -28,7 +28,6 @@ interface _GlobalComponents {
   'CustomerModal': typeof import("../../app/components/modal/CustomerModal.vue")['default']
   'EmployeeModal': typeof import("../../app/components/modal/EmployeeModal.vue")['default']
   'ProductModal': typeof import("../../app/components/modal/ProductModal.vue")['default']
-  'NaiveUi': typeof import("../../app/components/plugins/naive.ui")['default']
   'CustomerTable': typeof import("../../app/components/table/CustomerTable.vue")['default']
   'EmployeeTable': typeof import("../../app/components/table/EmployeeTable.vue")['default']
   'OrderTable': typeof import("../../app/components/table/OrderTable.vue")['default']
@@ -69,7 +68,6 @@ interface _GlobalComponents {
   'LazyCustomerModal': LazyComponent<typeof import("../../app/components/modal/CustomerModal.vue")['default']>
   'LazyEmployeeModal': LazyComponent<typeof import("../../app/components/modal/EmployeeModal.vue")['default']>
   'LazyProductModal': LazyComponent<typeof import("../../app/components/modal/ProductModal.vue")['default']>
-  'LazyNaiveUi': LazyComponent<typeof import("../../app/components/plugins/naive.ui")['default']>
   'LazyCustomerTable': LazyComponent<typeof import("../../app/components/table/CustomerTable.vue")['default']>
   'LazyEmployeeTable': LazyComponent<typeof import("../../app/components/table/EmployeeTable.vue")['default']>
   'LazyOrderTable': LazyComponent<typeof import("../../app/components/table/OrderTable.vue")['default']>

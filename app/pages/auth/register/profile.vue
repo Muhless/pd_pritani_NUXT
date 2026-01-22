@@ -95,15 +95,23 @@ const submit = async () => {
         />
 
         <p v-if="error" class="mt-2 text-sm text-red-500">{{ error }}</p>
-
-        <button
-          type="submit"
-          :disabled="loading"
-          class="py-3 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
-          {{ loading ? "Memproses..." : "Daftar" }}
-        </button>
-
+        <div class="w-full flex gap-3">
+          <button
+            type="button"
+            :disabled="loading"
+            class="py-3 w-1/2 bg-gray-500 text-white rounded-md hover:bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            @click="$router.back()"
+          >
+            Kembali
+          </button>
+          <button
+            type="submit"
+            :disabled="loading"
+            class="py-3 w-full bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            {{ loading ? "Memproses..." : "Daftar" }}
+          </button>
+        </div>
         <p class="text-gray-500">
           Sudah punya akun?
           <NuxtLink

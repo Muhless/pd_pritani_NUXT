@@ -28,7 +28,6 @@ export const RightSide: typeof import("../app/components/layout/dashboard/RightS
 export const CustomerModal: typeof import("../app/components/modal/CustomerModal.vue")['default']
 export const EmployeeModal: typeof import("../app/components/modal/EmployeeModal.vue")['default']
 export const ProductModal: typeof import("../app/components/modal/ProductModal.vue")['default']
-export const NaiveUi: typeof import("../app/components/plugins/naive.ui")['default']
 export const CustomerTable: typeof import("../app/components/table/CustomerTable.vue")['default']
 export const EmployeeTable: typeof import("../app/components/table/EmployeeTable.vue")['default']
 export const OrderTable: typeof import("../app/components/table/OrderTable.vue")['default']
@@ -69,7 +68,6 @@ export const LazyRightSide: LazyComponent<typeof import("../app/components/layou
 export const LazyCustomerModal: LazyComponent<typeof import("../app/components/modal/CustomerModal.vue")['default']>
 export const LazyEmployeeModal: LazyComponent<typeof import("../app/components/modal/EmployeeModal.vue")['default']>
 export const LazyProductModal: LazyComponent<typeof import("../app/components/modal/ProductModal.vue")['default']>
-export const LazyNaiveUi: LazyComponent<typeof import("../app/components/plugins/naive.ui")['default']>
 export const LazyCustomerTable: LazyComponent<typeof import("../app/components/table/CustomerTable.vue")['default']>
 export const LazyEmployeeTable: LazyComponent<typeof import("../app/components/table/EmployeeTable.vue")['default']>
 export const LazyOrderTable: LazyComponent<typeof import("../app/components/table/OrderTable.vue")['default']>

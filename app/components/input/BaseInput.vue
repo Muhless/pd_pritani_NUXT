@@ -19,7 +19,7 @@ const emit = defineEmits(["update:modelValue"]);
 const showPassword = ref(false);
 
 const isPassword = computed(
-  () => props.type === "password" && props.as !== "textarea"
+  () => props.type === "password" && props.as !== "textarea",
 );
 
 const inputType = computed(() =>
@@ -27,7 +27,7 @@ const inputType = computed(() =>
     ? showPassword.value
       ? "text"
       : "password"
-    : props.type || "text"
+    : props.type || "text",
 );
 </script>
 
@@ -46,7 +46,7 @@ const inputType = computed(() =>
         @input="
           emit(
             'update:modelValue',
-            ($event.target as HTMLTextAreaElement).value
+            ($event.target as HTMLTextAreaElement).value,
           )
         "
       />

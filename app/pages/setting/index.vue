@@ -1,4 +1,4 @@
-<script>
+<script setup>
 import BaseCard from "~/components/card/BaseCard.vue";
 
 useHead({

@@ -29,21 +29,23 @@ interface Employee {
 const message = useMessage();
 const dialog = useDialog();
 const search = ref("");
-const employees = ref<Employee[]>([]);
-const loading = ref(false);
 const showModal = ref(false);
 const editingEmployee = ref<Employee | null>(null);
 
-const { get, del } = useApi();
+const api = useApi();
+
+const employees = ref<Employee[]>([]);
+const loading = ref(true);
+const error = ref("");
 
 const fetchEmployees = async () => {
   try {
     loading.value = true;
-    const res = await get<Employee[]>("/employees");
-    employees.value = res || [];
+    employees.value = await api.get<Employee[]>("employees");
+    error.value = "";
   } catch (err: any) {
-    console.error("Error fetching employees:", err);
-    message.error(err?.message || "Gagal mengambil data karyawan");
+    error.value = err.message;
+    message.error("Gagal memuat data karyawan");
   } finally {
     loading.value = false;
   }
@@ -55,15 +57,21 @@ onMounted(() => {
 
 const filteredEmployees = computed(() =>
   employees.value.filter((e) =>
-    e.name.toLowerCase().includes(search.value.toLowerCase())
-  )
+    e.name.toLowerCase().includes(search.value.toLowerCase()),
+  ),
 );
 
-const handleSuccess = () => {
-  showModal.value = false;
-  editingEmployee.value = null;
-  fetchEmployees();
-};
+const activeEmployees = computed(
+  () => employees.value.filter((e) => e.status === "active").length,
+);
+
+const inactiveEmployees = computed(
+  () => employees.value.filter((e) => e.status === "inactive").length,
+);
+
+const onLeaveEmployees = computed(
+  () => employees.value.filter((e) => e.status === "leave").length,
+);
 
 const handleDetail = (id?: number) => {
   if (!id) {
@@ -71,7 +79,7 @@ const handleDetail = (id?: number) => {
     return;
   }
 
-  navigateTo(`/dashboard/employees/${id}`);
+  navigateTo(`/employee/${id}`);
 };
 
 const handleEdit = (id?: number) => {
@@ -89,45 +97,17 @@ const handleEdit = (id?: number) => {
   }
 };
 
-const handleDelete = async (id?: number) => {
-  if (!id) {
-    message.warning("ID karyawan tidak valid");
-    return;
-  }
-
-  dialog.warning({
-    title: "Konfirmasi Hapus",
-    content:
-      "Apakah Anda yakin ingin menghapus data karyawan ini? Tindakan ini tidak dapat dibatalkan.",
-    positiveText: "Hapus",
-    negativeText: "Batal",
-    onPositiveClick: async () => {
-      try {
-        await del(`/employees/${id}`);
-        message.success("Data karyawan berhasil dihapus");
-        await fetchEmployees();
-      } catch (err: any) {
-        console.error("Error deleting employee:", err);
-        message.error(err?.message || "Gagal menghapus data karyawan");
-      }
-    },
-  });
-};
-
 const handleAddNew = () => {
   editingEmployee.value = null;
   showModal.value = true;
 };
 
-const activeEmployees = computed(
-  () => employees.value.filter((e) => e.status === "active").length
-);
-const inactiveEmployees = computed(
-  () => employees.value.filter((e) => e.status === "inactive").length
-);
-const onLeaveEmployees = computed(
-  () => employees.value.filter((e) => e.status === "leave").length
-);
+const handleModalClose = () => {
+  showModal.value = false;
+  editingEmployee.value = null;
+  // Refresh data setelah modal ditutup
+  fetchEmployees();
+};
 </script>
 
 <template>
@@ -138,8 +118,11 @@ const onLeaveEmployees = computed(
           <h1 class="text-2xl font-bold text-primary">Daftar Karyawan</h1>
           <div class="flex gap-4 text-sm mt-1">
             <p class="text-gray-500">Total: {{ employees.length }} karyawan</p>
+            <span class="text-gray-300">|</span>
             <p class="text-green-600">Aktif: {{ activeEmployees }}</p>
+            <span class="text-gray-300">|</span>
             <p class="text-orange-600">Cuti: {{ onLeaveEmployees }}</p>
+            <span class="text-gray-300">|</span>
             <p class="text-red-600">Tidak Aktif: {{ inactiveEmployees }}</p>
           </div>
         </div>
@@ -151,7 +134,7 @@ const onLeaveEmployees = computed(
     <div class="mb-6">
       <NInput
         v-model:value="search"
-        placeholder="Cari karyawan berdasarkan nama, posisi, atau departemen..."
+        placeholder="Cari karyawan berdasarkan nama..."
         size="large"
         clearable
       >
@@ -161,9 +144,21 @@ const onLeaveEmployees = computed(
       </NInput>
     </div>
 
+    <!-- Error State -->
+    <div
+      v-if="error && !loading"
+      class="flex flex-col items-center justify-center py-20"
+    >
+      <NEmpty description="Gagal memuat data karyawan">
+        <template #extra>
+          <AddButton @click="fetchEmployees"> Coba Lagi </AddButton>
+        </template>
+      </NEmpty>
+    </div>
+
     <!-- Loading Skeleton -->
     <div
-      v-if="loading"
+      v-else-if="loading"
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
     >
       <div v-for="i in 8" :key="i" class="p-5 border rounded-xl animate-pulse">
@@ -189,7 +184,9 @@ const onLeaveEmployees = computed(
         "
       >
         <template #extra>
-          <AddButton @click="handleAddNew"> Tambah Karyawan </AddButton>
+          <AddButton v-if="!search" @click="handleAddNew">
+            Tambah Karyawan
+          </AddButton>
         </template>
       </NEmpty>
     </div>
@@ -210,14 +207,13 @@ const onLeaveEmployees = computed(
         :status="employee.status"
         @detail="handleDetail"
         @edit="handleEdit"
-        @delete="handleDelete"
       />
     </div>
 
     <EmployeeModal
       v-model:showModal="showModal"
       :employee="editingEmployee"
-      @success="handleSuccess"
+      @close="handleModalClose"
     />
   </div>
 </template>

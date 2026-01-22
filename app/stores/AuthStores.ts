@@ -38,7 +38,6 @@ export const useAuthStore = defineStore("auth", {
         });
 
         const text = await res.text();
-        console.log("🔥 RAW RESPONSE:", text);
 
         let data: any = {};
         try {
@@ -73,14 +72,11 @@ export const useAuthStore = defineStore("auth", {
       this.token = null;
       this.user = null;
       this.clearStorage();
-      console.log("✅ Logout berhasil");
     },
 
     saveToStorage() {
       if (process.client) {
         try {
-          console.log("💾 Saving to localStorage...");
-
           if (this.token) {
             localStorage.setItem("token", this.token);
           }
@@ -102,31 +98,16 @@ export const useAuthStore = defineStore("auth", {
     loadFromStorage() {
       if (process.client) {
         try {
-          console.log("🔄 Loading from localStorage...");
-
           const token = localStorage.getItem("token");
           const userStr = localStorage.getItem("user");
 
-          console.log("📦 localStorage values:", {
-            token: token ? "EXISTS" : "NULL",
-            user: userStr ? "EXISTS" : "NULL",
-          });
-
           if (!token || !userStr) {
-            console.log("❌ No data in localStorage");
             return;
           }
 
           this.token = token;
           this.user = JSON.parse(userStr);
-
-          console.log("✅ Loaded from localStorage:", {
-            token: this.token?.substring(0, 20) + "...",
-            user: this.user,
-            isAuthenticated: this.isAuthenticated,
-          });
         } catch (err) {
-          console.error("❌ Error loading from localStorage:", err);
           this.clearStorage();
         }
       }

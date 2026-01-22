@@ -17,8 +17,8 @@ definePageMeta({
 <template>
   <div class="space-y-3 p-9 h-screen">
     <BaseCard>
-      <h1 class="text-2xl font-bold text-primary mb-2">Dashboard</h1>
-      <p v-if="auth.user">
+      <h1 class="text-4xl font-bold text-primary mb-2">Dashboard</h1>
+      <p v-if="auth.user" class="text-2xl">
         Selamat datang,
         <span class="font-semibold">{{ auth.user.username }}</span>
       </p>

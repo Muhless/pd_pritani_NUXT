@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "pinia-plugin-persistedstate/nuxt",
   ],
+  css: ["~/assets/css/main.css"],
   build: {
     transpile:
       process.env.NODE_ENV === "production"
@@ -55,7 +56,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE_URL || "http://localhost:8080",
+      apiBase:
+        process.env.NUXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/",
     },
   },
 
