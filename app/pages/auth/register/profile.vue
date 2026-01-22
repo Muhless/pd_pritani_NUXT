@@ -1,42 +1,54 @@
 <script setup lang="ts">
-import { useHead } from "#app";
+import { navigateTo, useHead } from "#app";
 import { ref } from "vue";
-import BaseSelect from "~/components/input/BaseSelect.vue";
+import BaseInput from "~/components/input/BaseInput.vue";
 
 useHead({
   title: "Register | Dashboard PG. Pritani",
 });
 
-const username = ref("");
-const password = ref("");
-const role = ref("");
-const roleOptions = [
-  { label: "Admin", value: "admin" },
-  { label: "Karyawan", value: "employee" },
-];
-
-const name = ref("");
-const email = ref("");
-const phone = ref("");
-const address = ref("");
-
 const loading = ref(false);
 const error = ref("");
+const registerStore = useRegisterStore();
 
-const submitRegister = async () => {
+onMounted(() => {
+  if (registerStore.loadFromStorage) {
+    registerStore.loadFromStorage();
+  }
+  console.log("📋 Step1 data setelah load:", registerStore.step1);
+  console.log("📋 Step2 data setelah load:", registerStore.step2);
+});
+
+const submit = async () => {
   error.value = "";
-  if (!username.value || !password.value || !role.value) {
-    error.value = "Semua data wajib";
+
+  console.log("Step1 data:", registerStore.step1);
+  console.log("Step2 data:", registerStore.step2);
+
+  // Validasi input
+  const { name, phone, address } = registerStore.step2;
+
+  if (!name || !phone || !address) {
+    error.value = "Semua field harus diisi";
     return;
   }
 
-  registerStore.setStep1({
-    username: username.value,
-    password: password.value,
-    role: role.value,
-  });
+  if (phone.length < 10) {
+    error.value = "Nomor telepon minimal 10 digit";
+    return;
+  }
 
-  navigateTo("/auth/register/profile");
+  loading.value = true;
+
+  try {
+    await registerStore.submitRegister();
+    await navigateTo("/auth/login");
+  } catch (err: any) {
+    console.error("Gagal buat akun baru:", err);
+    error.value = err?.data?.message ?? "Registrasi gagal, silakan coba lagi";
+  } finally {
+    loading.value = false;
+  }
 };
 </script>
 
@@ -55,30 +67,31 @@ const submitRegister = async () => {
         <p class="text-gray-600">Silahkan isi data diri anda.</p>
       </div>
 
-      <form
-        @submit.prevent="submitRegister"
-        class="flex flex-col space-y-5 w-full"
-      >
+      <form @submit.prevent="submit" class="flex flex-col space-y-5 w-full">
         <BaseInput
-          v-model="name"
+          v-model="registerStore.step2.name"
           id="name"
           label="Nama"
           placeholder="Masukkan nama anda"
+          :disabled="loading"
         />
 
         <BaseInput
-          v-model="phone"
+          v-model="registerStore.step2.phone"
           id="phone"
           label="Nomor Telepon"
+          type="tel"
           placeholder="Masukkan nomor telepon anda"
+          :disabled="loading"
         />
 
         <BaseInput
-          v-model="address"
+          v-model="registerStore.step2.address"
           id="address"
           label="Alamat"
           placeholder="Masukkan alamat anda"
           as="textarea"
+          :disabled="loading"
         />
 
         <p v-if="error" class="mt-2 text-sm text-red-500">{{ error }}</p>
@@ -86,7 +99,7 @@ const submitRegister = async () => {
         <button
           type="submit"
           :disabled="loading"
-          class="py-3 bg-green-500 text-white rounded-md hover:bg-green-600"
+          class="py-3 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           {{ loading ? "Memproses..." : "Daftar" }}
         </button>

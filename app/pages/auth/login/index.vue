@@ -104,7 +104,7 @@ const auth = useAuthStore();
 const handleLogin = async () => {
   try {
     await auth.login(username.value, password.value);
-    navigateTo("/dashboard");
+    navigateTo("/home");
   } catch (err: any) {
     error.value = err?.message || "Terjadi kesalahan saat login.";
   }

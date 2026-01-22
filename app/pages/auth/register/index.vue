@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { navigateTo, useHead } from "#app";
 import { ref } from "vue";
+import BaseInput from "~/components/input/BaseInput.vue";
 import BaseSelect from "~/components/input/BaseSelect.vue";
 
 useHead({
   title: "Register | Dashboard PG. Pritani",
 });
 
-const username = ref("");
-const password = ref("");
-const role = ref("");
 const roleOptions = [
   { label: "Admin", value: "admin" },
   { label: "Karyawan", value: "employee" },
@@ -21,16 +19,33 @@ const registerStore = useRegisterStore();
 
 const handleRegister = async () => {
   error.value = "";
-  if (!username.value || !password.value || !role.value) {
-    error.value = "Semua data wajib";
+
+  // Ambil nilai dari store
+  const { username, password, role } = registerStore.step1;
+
+  if (!username || !password || !role) {
+    error.value = "Semua field harus diisi";
     return;
   }
 
+  if (username.length < 3) {
+    error.value = "Username minimal 3 karakter";
+    return;
+  }
+
+  if (password.length < 6) {
+    error.value = "Password minimal 6 karakter";
+    return;
+  }
+
+  // ✅ SIMPAN dengan nilai eksplisit
   registerStore.setStep1({
-    username: username.value,
-    password: password.value,
-    role: role.value,
+    username: username,
+    password: password,
+    role: role,
   });
+
+  console.log("✅ Step 1 tersimpan:", JSON.stringify(registerStore.step1));
 
   navigateTo("/auth/register/profile");
 };
@@ -56,13 +71,13 @@ const handleRegister = async () => {
         class="flex flex-col space-y-5 w-full"
       >
         <BaseInput
-          v-model="username"
+          v-model="registerStore.step1.username"
           id="username"
           label="Username"
           placeholder="Masukkan username anda"
         />
         <BaseInput
-          v-model="password"
+          v-model="registerStore.step1.password"
           id="password"
           label="Password"
           type="password"
@@ -70,7 +85,7 @@ const handleRegister = async () => {
         />
 
         <BaseSelect
-          v-model="role"
+          v-model="registerStore.step1.role"
           id="role"
           name="role"
           label="Posisi"
