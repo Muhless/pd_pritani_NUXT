@@ -1,5 +1,5 @@
-/// <reference types="@pinia/nuxt" />
 /// <reference types="@nuxtjs/tailwindcss" />
+/// <reference types="@pinia/nuxt" />
 /// <reference types="pinia-plugin-persistedstate" />
 /// <reference types="@nuxt/devtools" />
 /// <reference types="@nuxt/telemetry" />

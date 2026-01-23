@@ -33,7 +33,7 @@ const fetchEmployee = async () => {
   try {
     loading.value = true;
     const id = route.params.id;
-    employee.value = await api.get<Employee>(`employees/${id}`);
+    employee.value = await api.get<Employee>(`/employees/${id}`);
     error.value = "";
   } catch (err: any) {
     error.value = err.message;

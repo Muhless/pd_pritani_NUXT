@@ -647,7 +647,7 @@ const _inlineRuntimeConfig = {
     }
   },
   "public": {
-    "apiBase": "http://localhost:8080/api/",
+    "apiBase": "http://localhost:8080/api",
     "piniaPluginPersistedstate": {}
   }
 };
