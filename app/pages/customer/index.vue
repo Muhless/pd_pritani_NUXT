@@ -37,7 +37,7 @@ const fetchCustomers = async () => {
 
   try {
     const res = await get<CustomerResponse>(
-      `/customers?page=${page.value}&limit=${pageSize}`
+      `/customers?page=${page.value}&limit=${pageSize}`,
     );
 
     customers.value = res.data ?? [];
@@ -49,12 +49,11 @@ const fetchCustomers = async () => {
   }
 };
 
-onMounted(fetchCustomers);
+await fetchCustomers();
+watch(page, fetchCustomers);
 
-// PAGE CHANGE
-const handlePageChange = (newPage: number) => {
-  page.value = newPage;
-  fetchCustomers();
+const handlePageChange = (p: number) => {
+  page.value = p;
 };
 
 // ADD NEW
@@ -72,8 +71,7 @@ const handleSuccess = () => {
 
 // EDIT
 const openEdit = (id: number) => {
-  editingCustomer.value =
-    customers.value.find((x) => x.id === id) ?? null;
+  editingCustomer.value = customers.value.find((x) => x.id === id) ?? null;
   showModal.value = true;
 };
 
@@ -88,7 +86,7 @@ const deleteCustomer = async (id: number) => {
   <div class="p-9 space-y-3">
     <BaseCard>
       <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-primary">Pelanggan</h1>
+        <h1 class="text-2xl font-bold text-primary">Customers</h1>
         <AddButton label="Pelanggan" @click="handleAddNew" />
       </div>
     </BaseCard>

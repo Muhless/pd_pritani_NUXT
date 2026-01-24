@@ -16,7 +16,6 @@ export const useApi = () => {
         ...options.headers,
       };
 
-      // 🔐 otomatis kirim token
       if (auth.token) {
         headers.Authorization = `Bearer ${auth.token}`;
       }

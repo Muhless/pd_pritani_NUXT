@@ -2,7 +2,7 @@
   <div class="flex min-h-screen">
     <Sidebar />
 
-    <main class="flex-1 ml-16 bg-gray-50">
+    <main class="flex-1 ml-16 bg-gray-100">
       <slot />
     </main>
   </div>

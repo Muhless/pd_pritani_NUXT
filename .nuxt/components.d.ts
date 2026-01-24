@@ -21,6 +21,10 @@ export const DashboardCard: typeof import("../app/components/card/DashboardCard.
 export const EmployeeCard: typeof import("../app/components/card/EmployeeCard.vue")['default']
 export const OrderCard: typeof import("../app/components/card/OrderCard.vue")['default']
 export const ProductCard: typeof import("../app/components/card/ProductCard.vue")['default']
+export const DebtCard: typeof import("../app/components/card/finance/DebtCard.vue")['default']
+export const FinanceCard: typeof import("../app/components/card/finance/FinanceCard.vue")['default']
+export const IncomeCard: typeof import("../app/components/card/finance/IncomeCard.vue")['default']
+export const SalaryCard: typeof import("../app/components/card/finance/SalaryCard.vue")['default']
 export const BaseInput: typeof import("../app/components/input/BaseInput.vue")['default']
 export const BaseSelect: typeof import("../app/components/input/BaseSelect.vue")['default']
 export const Sidebar: typeof import("../app/components/layout/Sidebar.vue")['default']
@@ -61,6 +65,10 @@ export const LazyDashboardCard: LazyComponent<typeof import("../app/components/c
 export const LazyEmployeeCard: LazyComponent<typeof import("../app/components/card/EmployeeCard.vue")['default']>
 export const LazyOrderCard: LazyComponent<typeof import("../app/components/card/OrderCard.vue")['default']>
 export const LazyProductCard: LazyComponent<typeof import("../app/components/card/ProductCard.vue")['default']>
+export const LazyDebtCard: LazyComponent<typeof import("../app/components/card/finance/DebtCard.vue")['default']>
+export const LazyFinanceCard: LazyComponent<typeof import("../app/components/card/finance/FinanceCard.vue")['default']>
+export const LazyIncomeCard: LazyComponent<typeof import("../app/components/card/finance/IncomeCard.vue")['default']>
+export const LazySalaryCard: LazyComponent<typeof import("../app/components/card/finance/SalaryCard.vue")['default']>
 export const LazyBaseInput: LazyComponent<typeof import("../app/components/input/BaseInput.vue")['default']>
 export const LazyBaseSelect: LazyComponent<typeof import("../app/components/input/BaseSelect.vue")['default']>
 export const LazySidebar: LazyComponent<typeof import("../app/components/layout/Sidebar.vue")['default']>

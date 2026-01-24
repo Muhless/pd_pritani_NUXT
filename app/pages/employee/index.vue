@@ -105,7 +105,6 @@ const handleAddNew = () => {
 const handleModalClose = () => {
   showModal.value = false;
   editingEmployee.value = null;
-  // Refresh data setelah modal ditutup
   fetchEmployees();
 };
 </script>
@@ -115,15 +114,15 @@ const handleModalClose = () => {
     <BaseCard>
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="text-2xl font-bold text-primary">Daftar Karyawan</h1>
+          <h1 class="text-2xl font-bold text-primary">Employees</h1>
           <div class="flex gap-4 text-sm mt-1">
-            <p class="text-gray-500">Total: {{ employees.length }} karyawan</p>
+            <p class="text-gray-500">Total: {{ employees.length }} employees</p>
             <span class="text-gray-300">|</span>
-            <p class="text-green-600">Aktif: {{ activeEmployees }}</p>
+            <p class="text-green-600">Active: {{ activeEmployees }}</p>
             <span class="text-gray-300">|</span>
-            <p class="text-orange-600">Cuti: {{ onLeaveEmployees }}</p>
+            <p class="text-orange-600">Leave: {{ onLeaveEmployees }}</p>
             <span class="text-gray-300">|</span>
-            <p class="text-red-600">Tidak Aktif: {{ inactiveEmployees }}</p>
+            <p class="text-red-600">Not Active: {{ inactiveEmployees }}</p>
           </div>
         </div>
         <AddButton @click="handleAddNew"> Tambah Karyawan </AddButton>
@@ -151,7 +150,7 @@ const handleModalClose = () => {
     >
       <NEmpty description="Gagal memuat data karyawan">
         <template #extra>
-          <AddButton @click="fetchEmployees"> Coba Lagi </AddButton>
+          <AddButton @click="fetchEmployees">Coba Lagi </AddButton>
         </template>
       </NEmpty>
     </div>

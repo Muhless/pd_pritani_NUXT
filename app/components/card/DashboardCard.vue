@@ -8,15 +8,11 @@ interface Props {
   icon: string;
 }
 
-const {
-  label = "Tanpa label",
-  content = "XXX",
-  icon = "mdi:chart-line",
-} = defineProps<{
-  label?: string;
-  content?: string;
-  icon?: string;
-}>();
+const props = withDefaults(defineProps<Props>(), {
+  label: "Tanpa label",
+  content: "XXX",
+  icon: "mdi:chart-line",
+});
 </script>
 
 <template>

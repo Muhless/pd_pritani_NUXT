@@ -21,6 +21,10 @@ interface _GlobalComponents {
   'EmployeeCard': typeof import("../../app/components/card/EmployeeCard.vue")['default']
   'OrderCard': typeof import("../../app/components/card/OrderCard.vue")['default']
   'ProductCard': typeof import("../../app/components/card/ProductCard.vue")['default']
+  'DebtCard': typeof import("../../app/components/card/finance/DebtCard.vue")['default']
+  'FinanceCard': typeof import("../../app/components/card/finance/FinanceCard.vue")['default']
+  'IncomeCard': typeof import("../../app/components/card/finance/IncomeCard.vue")['default']
+  'SalaryCard': typeof import("../../app/components/card/finance/SalaryCard.vue")['default']
   'BaseInput': typeof import("../../app/components/input/BaseInput.vue")['default']
   'BaseSelect': typeof import("../../app/components/input/BaseSelect.vue")['default']
   'Sidebar': typeof import("../../app/components/layout/Sidebar.vue")['default']
@@ -61,6 +65,10 @@ interface _GlobalComponents {
   'LazyEmployeeCard': LazyComponent<typeof import("../../app/components/card/EmployeeCard.vue")['default']>
   'LazyOrderCard': LazyComponent<typeof import("../../app/components/card/OrderCard.vue")['default']>
   'LazyProductCard': LazyComponent<typeof import("../../app/components/card/ProductCard.vue")['default']>
+  'LazyDebtCard': LazyComponent<typeof import("../../app/components/card/finance/DebtCard.vue")['default']>
+  'LazyFinanceCard': LazyComponent<typeof import("../../app/components/card/finance/FinanceCard.vue")['default']>
+  'LazyIncomeCard': LazyComponent<typeof import("../../app/components/card/finance/IncomeCard.vue")['default']>
+  'LazySalaryCard': LazyComponent<typeof import("../../app/components/card/finance/SalaryCard.vue")['default']>
   'LazyBaseInput': LazyComponent<typeof import("../../app/components/input/BaseInput.vue")['default']>
   'LazyBaseSelect': LazyComponent<typeof import("../../app/components/input/BaseSelect.vue")['default']>
   'LazySidebar': LazyComponent<typeof import("../../app/components/layout/Sidebar.vue")['default']>
