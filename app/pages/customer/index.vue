@@ -36,7 +36,7 @@ const fetchCustomers = async () => {
   loading.value = true;
 
   try {
-    const res = await get<CustomerResponse>(
+    const res = await get<Customer[]>(
       `/customers?page=${page.value}&limit=${pageSize}`,
     );
 

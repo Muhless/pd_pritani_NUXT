@@ -31,7 +31,7 @@ export const useAuthStore = defineStore("auth", {
       try {
         this.loading = true;
         const config = useRuntimeConfig();
-        const res = await fetch(`${config.public.apiBase}/api/auth/login`, {
+        const res = await fetch(`${config.public.apiBase}/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password }),

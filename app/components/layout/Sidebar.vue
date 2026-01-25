@@ -45,6 +45,7 @@ const auth = useAuthStore();
 
 const menuItems = [
   { name: "Halaman Awal", to: "/home", icon: "mdi:view-dashboard" },
+  {name: "Admin", to:"/admin", icon: "mdi:account"},
   { name: "Karyawan", to: "/employee", icon: "mdi:account-box" },
   { name: "Pelanggan", to: "/customer", icon: "mdi:account-group" },
   { name: "Produk", to: "/product", icon: "ic:round-inventory-2" },

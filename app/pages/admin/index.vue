@@ -41,7 +41,7 @@ const error = ref("");
 const fetchEmployees = async () => {
   try {
     loading.value = true;
-    const response = await api.get<Employee[]>("/employees");
+    const response = await api.get<Employee[]>("/admins");
     employees.value = response.data;
     error.value = "";
   } catch (err: any) {
