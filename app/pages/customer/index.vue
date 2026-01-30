@@ -36,18 +36,16 @@ const fetchCustomers = async () => {
   loading.value = true;
 
   try {
-    const res = await get<Customer[]>(
-      `/customers?page=${page.value}&limit=${pageSize}`,
-    );
-
-    customers.value = res.data ?? [];
-    totalItems.value = res.total ?? 0;
-  } catch (err) {
-    console.error(err);
+    const res = await $fetch<CustomerResponse>("/api/customers");
+    customers.value = res.data;
+  } catch (e) {
+    console.error(e);
   } finally {
     loading.value = false;
   }
 };
+
+onMounted(fetchCustomers);
 
 await fetchCustomers();
 watch(page, fetchCustomers);

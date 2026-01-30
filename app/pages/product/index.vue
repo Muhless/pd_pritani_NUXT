@@ -37,10 +37,11 @@ const editingProduct = ref<Product | null>(null);
 const { get, del } = useApi();
 
 const fetchProducts = async () => {
+  loading.value = true;
   try {
-    loading.value = true;
     const res = await get<Product[]>("/products");
-    products.value = res || [];
+    console.log("Response:", res); // Debug: lihat struktur response
+    products.value = res.data || [];
   } catch (err: any) {
     console.error("Error fetching products:", err);
     message.error(err?.message || "Gagal mengambil data produk");
@@ -55,8 +56,8 @@ onMounted(() => {
 
 const filteredProducts = computed(() =>
   products.value.filter((p) =>
-    p.name.toLowerCase().includes(search.value.toLowerCase())
-  )
+    p.name.toLowerCase().includes(search.value.toLowerCase()),
+  ),
 );
 
 const handleSuccess = () => {
@@ -172,9 +173,7 @@ const handleAddNew = () => {
         "
       >
         <template #extra>
-          <AddButton @click="handleAddNew">
-            Tambah Produk
-          </AddButton>
+          <AddButton @click="handleAddNew"> Tambah Produk </AddButton>
         </template>
       </NEmpty>
     </div>

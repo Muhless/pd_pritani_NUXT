@@ -89,7 +89,7 @@
         <!-- Upload Foto -->
         <div class="flex flex-col space-y-2">
           <label for="photo" class="text-sm font-semibold text-gray-700">
-            Foto Produk
+            Foto Produk <span v-if="!isEdit" class="text-red-500">*</span>
           </label>
           <n-upload
             id="photo"
@@ -107,7 +107,10 @@
             </n-button>
           </n-upload>
           <span class="text-xs text-gray-500">
-            Format: JPG, PNG. Maksimal 2MB
+            Format: JPG, PNG. Maksimal 5MB
+          </span>
+          <span v-if="errors.photo" class="text-xs text-red-500">
+            {{ errors.photo }}
           </span>
 
           <!-- Preview Foto -->
@@ -205,6 +208,7 @@ const errors = ref({
   type: "",
   price: "",
   stock: "",
+  photo: "",
 });
 
 // Default file list untuk edit mode
@@ -214,7 +218,7 @@ const defaultFileList = computed(() => {
       {
         id: "existing",
         name: "product-photo",
-        status: "finished",
+        status: "finished" as const,
         url: props.product.photo,
       },
     ];
@@ -238,7 +242,7 @@ watch(
       form.value.photo = null;
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 // Format price untuk display
@@ -248,9 +252,12 @@ const formatPriceInput = (value: number | null) => {
 };
 
 // Parse price dari input
-const parsePrice = (input: string) => {
-  const value = input.replace(/\./g, "").replace(/,/g, "");
-  return Number(value);
+const parsePrice = (input: string): number => {
+  const cleaned = input.replace(/[^0-9]/g, "");
+
+  if (cleaned === "") return 0;
+
+  return Number(cleaned);
 };
 
 // Handle upload foto
@@ -261,9 +268,9 @@ const handleUploadChange = (options: any) => {
     const latestFile = fileList[fileList.length - 1];
     const file = latestFile.file;
 
-    // Validasi ukuran file (max 2MB)
-    if (file.size > 2 * 1024 * 1024) {
-      message.error("Ukuran file maksimal 2MB");
+    // Validasi ukuran file (max 5MB sesuai backend)
+    if (file.size > 5 * 1024 * 1024) {
+      message.error("Ukuran file maksimal 5MB");
       return;
     }
 
@@ -275,6 +282,7 @@ const handleUploadChange = (options: any) => {
 
     form.value.photo = file;
     form.value.photoPreview = URL.createObjectURL(file);
+    errors.value.photo = ""; // Clear error
   } else {
     form.value.photo = null;
     form.value.photoPreview = props.product?.photo || "";
@@ -288,6 +296,7 @@ const validateForm = (): boolean => {
     type: "",
     price: "",
     stock: "",
+    photo: "",
   };
 
   let isValid = true;
@@ -319,6 +328,12 @@ const validateForm = (): boolean => {
     isValid = false;
   }
 
+  // Validasi photo (wajib untuk create, opsional untuk edit)
+  if (!isEdit.value && !form.value.photo) {
+    errors.value.photo = "Foto produk wajib diupload";
+    isValid = false;
+  }
+
   return isValid;
 };
 
@@ -337,6 +352,7 @@ const resetForm = () => {
     type: "",
     price: "",
     stock: "",
+    photo: "",
   };
 };
 
@@ -358,31 +374,40 @@ const handleSubmit = async () => {
   try {
     loading.value = true;
 
-    // Prepare form data untuk upload
+    // Prepare form data untuk upload (sesuai backend Go)
     const formData = new FormData();
-    formData.append("name", form.value.name);
+    formData.append("name", form.value.name.trim());
     formData.append("type", form.value.type);
-    formData.append("price", form.value.price.toString());
     formData.append("stock", form.value.stock.toString());
+    formData.append("price", form.value.price.toString());
 
+    // Append photo jika ada
     if (form.value.photo) {
       formData.append("photo", form.value.photo);
     }
 
+    // Debug log
+    console.log("📤 Sending FormData:");
+    for (const pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+
     if (isEdit.value && props.product?.id) {
       // Update product
-      await patch(`/products/${props.product.id}`, formData);
+      const res = await patch(`/products/${props.product.id}`, formData);
+      console.log("✅ Update response:", res);
       message.success("Produk berhasil diupdate");
     } else {
       // Create new product
-      await post("/products", formData);
+      const res = await post("/products", formData);
+      console.log("✅ Create response:", res);
       message.success("Produk berhasil ditambahkan");
     }
 
     emit("success");
     closeModal();
   } catch (err: any) {
-    console.error("Error submitting product:", err);
+    console.error("❌ Error submitting product:", err);
     message.error(err?.message || "Gagal menyimpan produk");
   } finally {
     loading.value = false;

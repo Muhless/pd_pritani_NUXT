@@ -3,7 +3,7 @@
 // Interface untuk response standar dari backend
 interface ApiResponse<T> {
   data: T;
-  total?: number; // Untuk pagination
+  total?: number;
   message?: string;
 }
 
@@ -20,44 +20,50 @@ export const useApi = () => {
       method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
       body?: any;
       headers?: Record<string, string>;
-      params?: Record<string, any>; // Tambah support params
+      params?: Record<string, any>;
     } = {},
   ): Promise<ApiResponse<T>> {
-    // Return FULL response, bukan hanya .data
     try {
       const headers: Record<string, string> = {
-        "Content-Type": "application/json",
         ...options.headers,
       };
+
+      // ✅ CRITICAL FIX: Jangan set Content-Type untuk FormData
+      // Browser akan otomatis set dengan boundary yang benar
+      if (!(options.body instanceof FormData)) {
+        headers["Content-Type"] = "application/json";
+      }
 
       // Attach token jika ada
       if (process.client && auth.token) {
         headers.Authorization = `Bearer ${auth.token}`;
       }
 
-      // Debug log (hapus di production)
+      // Debug log
       console.log("🔵 API Request:", {
         url: `${baseURL}${endpoint}`,
         method: options.method || "GET",
         hasToken: !!auth.token,
+        isFormData: options.body instanceof FormData,
+        contentType: headers["Content-Type"] || "auto (FormData)",
       });
 
       const res = await $fetch<ApiResponse<T>>(`${baseURL}${endpoint}`, {
         method: options.method || "GET",
         body: options.body,
-        params: options.params, // Support query params
+        params: options.params,
         headers,
       });
 
       console.log("🟢 API Response:", res);
 
-      return res; // Return FULL response (data + total + message)
+      return res;
     } catch (err: any) {
       console.error("🔴 API Error:", err);
 
       // Handle 401 Unauthorized
       if (err?.response?.status === 401 || err?.statusCode === 401) {
-        auth.logout(); // Clear auth
+        auth.logout();
         navigateTo("/login");
       }
 

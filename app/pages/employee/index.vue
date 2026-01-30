@@ -115,7 +115,7 @@ const handleModalClose = () => {
     <BaseCard>
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="text-2xl font-bold text-primary">Employees</h1>
+          <h1 class="text-2xl font-bold text-primary">Karyawan</h1>
           <div class="flex gap-4 text-sm mt-1">
             <p class="text-gray-500">Total: {{ employees.length }} employees</p>
             <span class="text-gray-300">|</span>
